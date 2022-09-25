@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/index.ts hello -n jinyu",
-    "test": "node bin/index.js hello -n jinyu"
+    "test": "node bin/index.js hello -n jinyu",
+    "lint:fix": "npx eslint --ext .ts src/ --fix"
   },
   "keywords": [
     "commander",
