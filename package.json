@@ -7,7 +7,8 @@
   },
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "babel src --out-dir bin --extensions .ts",
+    "rollup": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "dev": "ts-node src/index.ts hello -n jinyu",
     "test": "node bin/index.js hello -n jinyu",
     "lint:fix": "npx eslint --ext .ts src/ --fix"
@@ -19,9 +20,18 @@
   "author": "jinyuk@foxmail.com",
   "license": "ISC",
   "dependencies": {
+    "babel-jest": "^29.0.3",
     "commander": "^9.4.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.19.1",
+    "@babel/plugin-transform-runtime": "^7.19.1",
+    "@babel/preset-env": "^7.19.1",
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-node-resolve": "^14.1.0",
+    "@rollup/plugin-typescript": "^8.5.0",
     "@types/commander": "^2.12.2",
     "@types/node": "^18.7.18",
     "@typescript-eslint/eslint-plugin": "^5.38.0",
@@ -31,6 +41,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
+    "rollup": "^2.79.1",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
     "typescript": "^4.8.3"
