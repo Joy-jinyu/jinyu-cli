@@ -1,7 +1,8 @@
-import { Command } from 'commander'
-const program = new Command()
+import { Command } from 'commander';
 
-program.name('jinyu-cli').description('jinyu cli tools').version('0.0.1')
+const program = new Command();
+
+program.name('jinyu-cli').description('jinyu cli tools').version('0.0.1');
 
 program
   .command('hello')
@@ -11,8 +12,8 @@ program
   .option('-s, --separator <char>', 'separator character', ',')
   .action((str, options) => {
     if (options.name) {
-      console.log(`hello ${str}, it's happy to meet you!`)
+      console.log(`hello ${str}, it's happy to meet you!`);
     }
-  })
+  });
 
-program.parse(process.argv)
+program.parse(process.argv);

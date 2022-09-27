@@ -1,16 +1,22 @@
 {
   "compilerOptions": {
     //   /* Visit https://aka.ms/tsconfig to read more about this file */
-    "target": "es5", // 指定ECMAScript目标版本
-    "module": "commonjs", // 指定模块化类型
+    /**
+     * https://typestrong.org/ts-node/docs/imports/
+     * node --experimental-specifier-resolution=node --loader ts-node/esm src/index.ts
+     */
+    "target": "ESNext", // 指定ECMAScript目标版本
+    "module": "ESNext", // 指定模块化类型
     "declaration": true, // 生成 `.d.ts` 文件
     "emitDeclarationOnly": true, // 仅仅生成 `.d.ts` 文件
     "outDir": "./bin", // 编译后生成的文件目录
     "strict": true, // 开启严格的类型检测
 
     "esModuleInterop": true, // 支持 package.json `type: "module"` 启用esModuleInterop也会启用allowSyntheticDefaultImports.
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
   },
   "exclude": ["node_modules", "__tests__"],
-  "include": ["src/**/*", "rollup.config.ts"]
+  "include": ["src/**/*", "rollup.config.ts"],
+  "lib": ["esnext"]
 }
