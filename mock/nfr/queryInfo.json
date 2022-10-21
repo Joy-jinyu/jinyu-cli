@@ -1,0 +1,10 @@
+{
+    "nfrId": "10",
+    "name": "测试NFR-001",
+    "amount": "10",
+    "ownerAddress": "0xc5ca3e05cf663e115203a2456a61c278ce20ee6b",
+    "contractAddress": "0x248905e586ef46d0ab5f59248f6b897e085e2d85",
+    "creatorAddress": "0xc5ca3e05cf663e115203a2456a61c278ce20ee6b",
+    "nfrProtocol": "erc-1155",
+    "createTime": "1970-01-20 14:39:32"
+}

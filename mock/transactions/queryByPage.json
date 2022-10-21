@@ -1,0 +1,23 @@
+{
+    "data": {
+        "pageStart": 1,
+        "pageSize": 10,
+        "totalElements": 10,
+        "totalPages": 1,
+        "responseList": [
+            {
+                "txnHash": "0xebf2e58c97a042bd95cf4595fe3a8f7b5c85210914340bc34847c6c69e2245c6",
+                "blockHeight": "18478",
+                "fromAddress": "0xc5ca3e05cf663e115203a2456a61c278ce20ee6b",
+                "toAddress": "0xc5ca3e05cf663e115203a2456a61c278ce20ee6b",
+                "transValue": "0",
+                "method": "burn",
+                "transFee": null,
+                "type": 123123,
+                "reqData": "{\"account\":\"0xc5ca3e05cf663e115203a2456a61c278ce20ee6b\",\"amount\":5,\"id\":10}",
+                "nfrIds": "123",
+                "createTime": "1970-01-20 14:39:32"
+            }
+        ]
+    }
+}

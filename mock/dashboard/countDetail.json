@@ -1,0 +1,13 @@
+{
+    "data": {
+        "txnCount": 10,
+        "recentTxnCount": 11,
+        "blockHeight": "18554",
+        "recentBlockCount": 12,
+        "avgBlockTime": 13,
+        "avgTxnCount": 14,
+        "addressCount": 15,
+        "contractCount": 16,
+        "recentTransactionsMap": null
+    }
+}

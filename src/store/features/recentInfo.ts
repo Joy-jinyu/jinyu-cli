@@ -1,0 +1,62 @@
+import { createSlice } from '@reduxjs/toolkit';
+import request from 'request';
+export const BLOCK_TYPE = 'recentBlock';
+export const TRANS_TYPE = 'recentTrans';
+
+export const recentInfoSlice = createSlice({
+    name: 'recentInfo',
+    initialState: {
+        list: [],
+        pageInfo: {
+            pageStart: 1,
+            pageSize: 10,
+            totalElements: 10,
+            totalPages: 1,
+        },
+    },
+    reducers: {
+        updateList(state, { payload = {} }) {
+            const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
+            state.list = responseList.map(item => ({ key: item.txnHash, ...item }));
+            state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
+        },
+        updatePage(state, { payload }) {
+            const { pageInfo } = payload;
+            state.pageInfo = { ...pageInfo, ...payload };
+        },
+        getInitState(state) {
+            Object.assign(state, {
+                list: [],
+                pageInfo: {
+                    pageStart: 1,
+                    pageSize: 10,
+                    totalElements: 10,
+                    totalPages: 1,
+                },
+            });
+        }
+    },
+});
+
+export const { updateList, getInitState, updatePage } = recentInfoSlice.actions;
+// 修改table
+export const changTable = (page, pageSize, pageType) => async (dispatch) => {
+    dispatch(updatePage({ pageStart: page, pageSize }));
+    dispatch(asyncGetPageList(pageType));
+}
+// 获取页面总览数据
+export const asyncGetPageList = (pageType = '') => (dispatch: any, getState) => {
+    const { main, recentInfo } = getState();
+    const { pageInfo } = recentInfo;
+    const { pageSize, pageStart } = pageInfo;
+    const type = pageType ? pageType : main.routeParam.type;
+    const url = type === BLOCK_TYPE ? '/block/queryByPage' : '/transactions/queryByPage';
+    return request.post({ url, query: { pageSize, pageStart } })
+        .then(res => {
+            return dispatch(updateList(res?.data));
+        }).catch((e) => {
+            console.log(e);
+        })
+}
+
+export default recentInfoSlice.reducer;

@@ -1,0 +1,11 @@
+{
+    "address": "0xc5ca3e05cf663e115203a2456a61c278ce20ee6b",
+    "code": 1,
+    "searchData": {
+        "tokenCount": 1,
+        "walletCount": 321,
+        "transactionCount": 123,
+        "nfrCount": 123,
+        "nfrUriList": []
+    }
+}
