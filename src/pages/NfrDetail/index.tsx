@@ -54,7 +54,7 @@ function NfrDetail() {
 
                 <Row gutter={24}>
                     <Col className="label" span={2}><span>生成者</span></Col>
-                    <Col><Link to="">{detail.creatorAddress}</Link></Col>
+                    <Col><Link to={`/contractDetail/${detail.creatorAddress}`}>{detail.creatorAddress}</Link></Col>
                 </Row>
                 <Row gutter={24}>
                     <Col className="label" span={2}><span>类型</span></Col>
