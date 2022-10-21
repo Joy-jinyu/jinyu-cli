@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { List, Button, Popover, } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
-import scendsTakenTo from '~/utils/scendsTakenTo';
 import { NavigateAddress } from '@';
 import overLenTextShow from '~/utils/overLenTextShow'
 import './index.less'
@@ -49,7 +48,7 @@ function InfoList(props: any) {
               title={<Popover content={item.blockHeight}>
                 <Link to={`/blockHeight/${item.blockHeight}`}>{`# ${overLenText(item.blockHeight)}`}</Link>
               </Popover>}
-              description={`${scendsTakenTo(new Date(item.createTime).getTime())} scends ago`}
+              description={`${item.scendsTakenTo} scends ago`}
             />
             <span>{`${item?.transactionsList?.length} 比交易`}</span>
           </List.Item>
@@ -73,7 +72,7 @@ function InfoList(props: any) {
                   <Link to={`/transaction/${item.txnHash}`}>{`# ${overLenText(item.txnHash)}`}</Link>
                 </Popover>
               }
-              description={`${scendsTakenTo(new Date(item.createTime).getTime())} scends ago`}
+              description={`${item.scendsTakenTo} scends ago`}
             />
             <div className="briefly-wrap">
               <div className="briefly">

@@ -11,14 +11,16 @@ import child_process from 'child_process'
 import Router from 'koa-router'
 import cors from '@koa/cors'
 
-const is_files_mock = true;
+const is_files_mock = false;
 // @ts-ignore
 let axiosIns = axios.create({
   timeout: 10000
 })
-// "dev": "NODE_ENV=local nodemon --watch server.ts --exec ts-node server.ts",
 // "server": "yarn build && cross-env NODE_ENV=production ts-node server.ts",
 const API_HOST = {
+  //测试环境
+  // 'local': 'http://192.168.0.198:8080',
+  // 开发本地
   'local': 'http://192.168.1.93:8080',
   'uat': 'http://192.168.0.198:8080',
   'prod': 'http://192.168.1.93:8080',
@@ -69,7 +71,10 @@ async function createAppServer() {
           const method = ctx.request.method.toLowerCase();
           const params = ctx.request.body
           // @ts-ignore
+          console.log(process.env.NODE_ENV, `${API_HOST[process.env.NODE_ENV]}${apiPath}`);
+          // @ts-ignore
           const data = await axiosIns[method](`${API_HOST[process.env.NODE_ENV]}${apiPath}`, params, {}).then(function (res) {
+            console.log("rerere:", res);
             let result = (res?.data || null), error;
             if (res && res.status === 200) {
               if (!result) {
@@ -140,7 +145,6 @@ async function createAppServer() {
       ctx.body = html
       ctx.status = 200
     } catch (e: any) {
-      console.log('走到这里了吗');
       console.log(e);
       if (IS_LOCAL) {
         vite.ssrFixStacktrace(e)

@@ -58,7 +58,7 @@ function NfrDetail() {
                 </Row>
                 <Row gutter={24}>
                     <Col className="label" span={2}><span>类型</span></Col>
-                    <Col><Link to="">{detail.nfrProtocol}</Link></Col>
+                    <Col>{detail.nfrProtocol}</Col>
                 </Row>
             </div>
             <div className="table-title">
@@ -77,6 +77,7 @@ function NfrDetail() {
                     onChange: pageChange
                 }}
                 columns={columns}
+                rowKey={record => record.txnHash}
             />
         </div >
     );

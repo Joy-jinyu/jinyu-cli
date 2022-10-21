@@ -17,7 +17,7 @@ export const recentInfoSlice = createSlice({
     reducers: {
         updateList(state, { payload = {} }) {
             const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
-            state.list = responseList.map(item => ({ key: item.txnHash, ...item }));
+            state.list = responseList;
             state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
         },
         updatePage(state, { payload }) {

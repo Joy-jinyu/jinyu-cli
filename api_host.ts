@@ -2,8 +2,6 @@
 const APIHOST: any = {
     local: 'http://localhost:8888',
     uat: 'http://192.168.0.198:8888',
-
-
 }
 
 let HOST_NAME = ''

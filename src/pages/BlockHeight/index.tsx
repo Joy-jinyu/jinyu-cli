@@ -14,6 +14,7 @@ function BlockHeight() {
     const { type = '' } = useParams();
     const dispatch = useDispatch();
     const { list = [], pageInfo, info = {} } = useSelector((state: any) => state.blockHeight);
+    console.log(list, pageInfo, info);
     const { address = '', searchData = {} } = info;
     useEffect(() => {
         if (isEmptyObj(info)) {
@@ -60,6 +61,7 @@ function BlockHeight() {
                     onChange: pageChange
                 }}
                 columns={columns}
+                rowKey={record => record.txnHash}
             />
         </div>
     );

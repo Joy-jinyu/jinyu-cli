@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Tag } from 'antd';
 import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import isEmptyObj from '~/utils/isEmptyObj';
@@ -15,6 +15,7 @@ function Transaction() {
     const { type = '' } = useParams();
     const dispatch = useDispatch();
     const { detail = {} } = useSelector((state: any) => state.transaction);
+    console.log(detail);
     useEffect(() => {
         if (isEmptyObj(detail)) {
             dispatch(asyncGetDetail(type))
@@ -26,7 +27,7 @@ function Transaction() {
     return (
         <div className="transaction-detail">
             <div className='title-wrap'>
-                <h3>交易哈希</h3>
+                <h3>交易哈希<Tag color="green">交易成功</Tag></h3>
                 <span>{detail.txnHash}</span>
             </div>
             <div className="detail-wrap">

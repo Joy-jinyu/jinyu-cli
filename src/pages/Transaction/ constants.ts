@@ -1,3 +1,4 @@
+export const CREATE = 'create';
 export const MINT = 'mint';
 export const MINT_BATCH = 'mintBatch';
 export const TRANSFER = 'transfer';
@@ -7,6 +8,9 @@ export const BURN_BATCH = 'burnBatch';
 
 
 export const transactionEnum = {
+    [CREATE]: {
+        title: '创建'
+    },
     [MINT]: {
         // 单向
         title: '铸造',

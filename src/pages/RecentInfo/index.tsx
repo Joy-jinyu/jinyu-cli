@@ -33,6 +33,7 @@ function RecentInfo() {
             </div>
             <h3 className="title">{PAGE_CONFIG[type].title}</h3>
             <Table
+                columns={PAGE_CONFIG[type].tableColumns}
                 dataSource={list}
                 pagination={{
                     total: pageInfo.totalElements,
@@ -40,8 +41,7 @@ function RecentInfo() {
                     pageSize: pageInfo.pageSize,
                     onChange: pageChange
                 }}
-                columns={PAGE_CONFIG[type].tableColumns}
-                rowClassName="editable-row"
+                rowKey={({ txnHash, blockHeight }) => (txnHash || blockHeight)}
             />
         </div>
     );

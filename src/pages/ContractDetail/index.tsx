@@ -5,19 +5,19 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import isEmptyObj from '~/utils/isEmptyObj';
 import columns from './constants';
-import { asyncGetPageList, changTable, asyncGetNfrDetail, getInitState, downTrans } from '../../store/features/contractDetail';
+import { asyncGetPageList, changTable, asyncGetContractDetail, getInitState, downTrans } from '../../store/features/contractDetail';
 import './index.less';
 
 
 function ContractDetail() {
     const { type = '' } = useParams();
     const dispatch = useDispatch();
-    const { list = [], pageInfo, detail = {}, info = {} } = useSelector((state: any) => state.contractDetail);
+    const { list = [], pageInfo, info = {} } = useSelector((state: any) => state.contractDetail);
     const { tokenCount, walletCount, transactionCount } = info.searchData || {};
     useEffect(() => {
         if (isEmptyObj(info)) {
             dispatch(asyncGetPageList(type));
-            dispatch(asyncGetNfrDetail(type));
+            dispatch(asyncGetContractDetail(type));
         }
         return () => {
             dispatch(getInitState());
@@ -32,7 +32,6 @@ function ContractDetail() {
     return (
         <div className="contract-detail">
             <div className="contract-title">
-                <h3 className="title">{detail.name}</h3>
                 <Link to="">{`合约：${info.address}`}</Link>
             </div>
             <div className='detail-info'>
@@ -75,7 +74,7 @@ function ContractDetail() {
 }
 
 ContractDetail.getInitialProps = () => {
-    return [asyncGetPageList(), asyncGetNfrDetail()]
+    return [asyncGetPageList(), asyncGetContractDetail()]
 }
 
 export default ContractDetail;

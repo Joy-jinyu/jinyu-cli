@@ -5,6 +5,7 @@ const TIMEOUT = 10000,
     SUCCESS_STATUS = 200;
 
 let axiosIns = axios.create({
+    baseURL: HOST_NAME,
     timeout: TIMEOUT
 })
 const PREFIX = '/api';
@@ -18,7 +19,7 @@ interface IParams {
 function request({ method, url, options, config = {}, isDownLoad = false }) {
     return new Promise(function (resolve, reject) {
         // @ts-ignore
-        axiosIns[method](`${HOST_NAME}${PREFIX}${url}`, options, config).then(function (res) {
+        axiosIns[method](`${PREFIX}${url}`, options, config).then(function (res) {
             let result = res.data,
                 error;
 

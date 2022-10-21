@@ -16,9 +16,6 @@ export const contractDetailSlice = createSlice({
         info: {}
     },
     reducers: {
-        updateDetail(state, { payload }) {
-            state.detail = payload;
-        },
         updateInfo(state, { payload }) {
             state.info = payload;
         },
@@ -47,7 +44,7 @@ export const contractDetailSlice = createSlice({
     },
 });
 
-export const { updateList, updatePage, updateDetail, getInitState, updateInfo } = contractDetailSlice.actions;
+export const { updateList, updatePage, getInitState, updateInfo } = contractDetailSlice.actions;
 // 修改table
 export const changTable = (page, pageSize, hash) => async (dispatch) => {
     dispatch(updatePage({ pageStart: page, pageSize }));
@@ -66,12 +63,9 @@ export const asyncGetPageList = (id = '') => (dispatch: any, getState) => {
         })
 }
 // 获取nfr数据
-export const asyncGetNfrDetail = (id = '') => async (dispatch: any, getState) => {
-    const { main, contractDetail } = getState();
-    const { pageInfo } = contractDetail;
+export const asyncGetContractDetail = (id = '') => async (dispatch: any, getState) => {
+    const { main } = getState();
     const nfrIds = id ? id : main.routeParam.type;
-    const infoRes = await request.post({ url: '/nfr/queryInfo', query: { tokenId: nfrIds } })
-    dispatch(updateDetail(infoRes?.data || {}))
     const res = await request.post({ url: '/dashboard/search', query: { address: nfrIds } });
     dispatch(updateInfo(res?.data || {}))
 }

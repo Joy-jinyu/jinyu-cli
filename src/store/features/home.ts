@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import scendsTakenTo from '~/utils/scendsTakenTo';
 import request from 'request';
 
 export const homeSlice = createSlice({
@@ -14,11 +15,18 @@ export const homeSlice = createSlice({
         },
         getLastBlock(state, { payload = {} }) {
             const { responseList = [] } = payload;
-            state.lastBlock = responseList
+            console.log(responseList);
+            state.lastBlock = responseList.map((item) => ({
+                ...item,
+                scendsTakenTo: scendsTakenTo(new Date(item.createTime).getTime())
+            }));
         },
         getLastTransactions(state, { payload = {} }) {
             const { responseList = [] } = payload;
-            state.lastTransactions = responseList
+            state.lastTransactions = responseList.map((item) => ({
+                ...item,
+                scendsTakenTo: scendsTakenTo(new Date(item.createTime).getTime())
+            }));
         },
         getInitState(state) {
             Object.assign(state, {
