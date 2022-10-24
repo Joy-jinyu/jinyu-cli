@@ -4,29 +4,30 @@ import postcssPresetEnv from 'postcss-preset-env';
 import path from 'path';
 
 export default defineConfig({
-  build: {
-    minify: false,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src/components/index.ts'),
-      'request': path.resolve(__dirname, 'src/utils/request.ts'),
-      'pages': path.resolve(__dirname, 'src/pages'),
-      '~': path.resolve(__dirname, 'src'),
-    }
-  },
-  css: {
-    modules: {
-      generateScopedName: '[local]',
+    build: {
+        minify: false
     },
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'src/components/index.ts'),
+            request: path.resolve(__dirname, 'src/utils/request.ts'),
+            pages: path.resolve(__dirname, 'src/pages'),
+            utils: path.resolve(__dirname, 'src/utils/index.ts'),
+            '~': path.resolve(__dirname, 'src')
+        }
     },
-    postcss: {
-      plugins: [postcssPresetEnv],
+    css: {
+        modules: {
+            generateScopedName: '[local]'
+        },
+        preprocessorOptions: {
+            less: {
+                javascriptEnabled: true
+            }
+        },
+        postcss: {
+            plugins: [postcssPresetEnv]
+        }
     },
-  },
-  plugins: [react()]
-})
+    plugins: [react()]
+});

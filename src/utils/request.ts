@@ -1,67 +1,86 @@
 import axios from 'axios';
 import { message } from 'antd';
 import HOST_NAME from '../../api_host';
+
 const TIMEOUT = 10000,
     SUCCESS_STATUS = 200;
 
-let axiosIns = axios.create({
+const axiosIns = axios.create({
     baseURL: HOST_NAME,
     timeout: TIMEOUT
-})
+});
+
 const PREFIX = '/api';
+
 interface IParams {
     url: string;
-    query?: any;
-    config?: any
-    isDownLoad?: any
+    query?: { [name: string]: unknown };
+    config?: { [name: string]: unknown };
+    isDownLoad?: boolean;
 }
-// @ts-ignore
-function request({ method, url, options, config = {}, isDownLoad = false }) {
-    return new Promise(function (resolve, reject) {
-        // @ts-ignore
-        axiosIns[method](`${PREFIX}${url}`, options, config).then(function (res) {
-            let result = res.data,
-                error;
 
-            if (res && res.status === SUCCESS_STATUS) {
-                const data = res.data;
-                res.data = typeof data === 'undefined' ? {} : data;
-                if (res.data.code === 99) {
-                    throw res.data.message
+interface IRequest {
+    method: 'get' | 'post';
+    url: string;
+    options?: { [name: string]: unknown };
+    config?: { [name: string]: unknown };
+    isDownLoad?: boolean;
+}
+interface ErrnoException extends Error {
+    data?: unknown;
+    code?: number;
+}
+
+function request({
+    method,
+    url,
+    options,
+    config = {},
+    isDownLoad = false
+}: IRequest) {
+    return new Promise(function (resolve, reject) {
+        axiosIns[method](`${PREFIX}${url}`, options, config)
+            .then(function (res) {
+                const result = res.data;
+
+                if (res && res.status === SUCCESS_STATUS) {
+                    const data = res.data;
+                    res.data = typeof data === 'undefined' ? {} : data;
+                    if (res.data.code === 99) {
+                        throw res.data.message;
+                    }
+                    if (isDownLoad) {
+                        const contentDisposition =
+                            res.headers['content-disposition'];
+                        const filename = contentDisposition
+                            ? contentDisposition.match(/filename=(.*)/)![1]
+                            : 'download.csv';
+                        const blob = new Blob([res.data], { type: 'text/csv' });
+                        const elink = document.createElement('a');
+                        elink.style.display = 'none';
+                        elink.href = window.URL.createObjectURL(blob);
+                        elink.download = filename;
+                        elink.click();
+                        URL.revokeObjectURL(elink.href);
+                    }
+
+                    resolve(res.data);
+                } else {
+                    const error: ErrnoException = new Error();
+                    error.message = result.message;
+                    error.data = res.data;
+                    error.code = res.status;
+                    throw error;
                 }
-                if (isDownLoad) {
-                    const filename = res.headers['content-disposition']?.match(
-                        /filename=(.*)/
-                    )[1];
-                    const blob = new Blob([res.data], { type: 'text/csv' });
-                    let elink = document.createElement("a");
-                    elink.style.display = "none";
-                    elink.href = window.URL.createObjectURL(blob);
-                    elink.download = filename;
-                    elink.click();
-                    URL.revokeObjectURL(elink.href);
-                    // document.body.removeChild(elink);
+            })
+            .catch(function (error) {
+                message.error(error);
+                if (!axios.isCancel(error)) {
+                    reject(error);
                 }
-                resolve(res.data);
-            } else {
-                error = new Error()
-                error.message = result.message
-                // @ts-ignore
-                error.data = res.data
-                // @ts-ignore
-                error.code = res.status;
-                throw error;
-            }
-            // @ts-ignore
-        }).catch(function (error) {
-            message.error(error);
-            if (!axios.isCancel(error)) {
-                reject(error);
-            }
-        });
+            });
     });
 }
-// @ts-ignore
 function get(params: IParams) {
     const { url, query, config, isDownLoad } = params;
     return request({
@@ -78,9 +97,12 @@ function post(params: IParams) {
     return request({
         method: 'post',
         url,
-        options: Object.assign({
-            ...query
-        }, config),
+        options: Object.assign(
+            {
+                ...query
+            },
+            config
+        ),
         isDownLoad
     });
 }
@@ -88,4 +110,4 @@ function post(params: IParams) {
 export default {
     get: get,
     post: post
-}
+};

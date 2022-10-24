@@ -93,7 +93,19 @@ function Layout(props) {
 }
 function CopyText(props) {
   function copy(data) {
-    navigator.clipboard.writeText(data);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(data);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.setAttribute("readonly", "readonly");
+      textarea.value = data;
+      document.body.appendChild(textarea);
+      textarea.select();
+      if (document.execCommand) {
+        document.execCommand("copy");
+      }
+      textarea.style.display = "none";
+    }
     antd.message.success("\u590D\u5236\u6210\u529F");
   }
   return /* @__PURE__ */ jsxRuntime.jsxs("div", {
@@ -110,32 +122,49 @@ function CopyText(props) {
   });
 }
 const APIHOST = {
-  local: "http://192.168.1.56:8888",
-  uat: "http://www.baidu.com"
+  local: "http://localhost:8888",
+  uat: "http://192.168.0.198:8888"
 };
 let HOST_NAME = "";
 const NODE_ENV = typeof process !== "undefined" ? process.env.NODE_ENV : window.LOCAL_ENV;
 HOST_NAME = APIHOST[NODE_ENV.toLocaleLowerCase()];
 var HOST_NAME$1 = HOST_NAME;
 const TIMEOUT = 1e4, SUCCESS_STATUS = 200;
-let axiosIns = axios__default["default"].create({
+const axiosIns = axios__default["default"].create({
+  baseURL: HOST_NAME$1,
   timeout: TIMEOUT
 });
 const PREFIX = "/api";
-function request({ method, url, options, config = {} }) {
+function request({
+  method,
+  url,
+  options,
+  config = {},
+  isDownLoad = false
+}) {
   return new Promise(function(resolve, reject) {
-    console.log(`${HOST_NAME$1}${PREFIX}${url}`);
-    axiosIns[method](`${HOST_NAME$1}${PREFIX}${url}`, options, config).then(function(res) {
-      let result = res.data, error;
+    axiosIns[method](`${PREFIX}${url}`, options, config).then(function(res) {
+      const result = res.data;
       if (res && res.status === SUCCESS_STATUS) {
         const data = res.data;
         res.data = typeof data === "undefined" ? {} : data;
         if (res.data.code === 99) {
           throw res.data.message;
         }
+        if (isDownLoad) {
+          const contentDisposition = res.headers["content-disposition"];
+          const filename = contentDisposition ? contentDisposition.match(/filename=(.*)/)[1] : "download.csv";
+          const blob = new Blob([res.data], { type: "text/csv" });
+          const elink = document.createElement("a");
+          elink.style.display = "none";
+          elink.href = window.URL.createObjectURL(blob);
+          elink.download = filename;
+          elink.click();
+          URL.revokeObjectURL(elink.href);
+        }
         resolve(res.data);
       } else {
-        error = new Error();
+        const error = new Error();
         error.message = result.message;
         error.data = res.data;
         error.code = res.status;
@@ -150,22 +179,27 @@ function request({ method, url, options, config = {} }) {
   });
 }
 function get(params) {
-  const { url, query, config } = params;
+  const { url, query, config, isDownLoad } = params;
   return request({
     method: "get",
     url,
     options: query || {},
-    config
+    config,
+    isDownLoad
   });
 }
 function post(params) {
-  const { url, query, config } = params;
+  const { url, query, config, isDownLoad } = params;
   return request({
     method: "post",
     url,
-    options: Object.assign({
-      ...query
-    }, config)
+    options: Object.assign(
+      {
+        ...query
+      },
+      config
+    ),
+    isDownLoad
   });
 }
 var request$1 = {
@@ -226,17 +260,46 @@ function CommonSearch(props) {
     onSearch
   });
 }
+const formatSeconds = (value) => {
+  let second = Math.floor(value);
+  let minute = 0;
+  let hour = 0;
+  if (second > 60) {
+    minute = Math.floor(second / 60);
+    second = Math.floor(second % 60);
+    if (minute > 60) {
+      hour = Math.floor(minute / 60);
+      minute = Math.floor(minute % 60);
+    }
+  }
+  let result = "" + Math.floor(second) + "s";
+  if (minute > 0) {
+    result = "" + Math.floor(minute) + "m" + result;
+  }
+  if (hour > 0) {
+    result = "" + Math.floor(hour) + "h" + result;
+  }
+  return result;
+};
+const isEmptyObj = (obj = {}) => {
+  return !Object.keys(obj).length;
+};
 const TEXT_MAX_LEN = 12;
 const TEXT_SPLIT_LEN = 6;
-const overLenTextShow = (text = "") => {
+const overLenTextShow = (text = "", replaceStr = "...") => {
   if (text.length > TEXT_MAX_LEN) {
-    return text.replace(text.slice(TEXT_SPLIT_LEN, text.length - TEXT_SPLIT_LEN), "...");
+    return text.replace(text.slice(TEXT_SPLIT_LEN, text.length - TEXT_SPLIT_LEN), replaceStr);
   }
   return text;
 };
-function NavigateAddress({
-  address
-}) {
+const SCENDS = 1e3;
+const scendsTakenTo = (times) => {
+  return Math.ceil((new Date().getTime() - times) / SCENDS);
+};
+function NavigateAddress(props) {
+  const {
+    address
+  } = props;
   const jumpToAddress = useSearchNavigate();
   const handleBtn = React.useCallback(() => {
     jumpToAddress(address);
@@ -245,6 +308,7 @@ function NavigateAddress({
     style: {
       paddingLeft: 0
     },
+    ...props,
     type: "link",
     onClick: handleBtn,
     children: overLenTextShow(address)
@@ -279,11 +343,22 @@ const homeSlice = toolkit.createSlice({
     },
     getLastBlock(state, { payload = {} }) {
       const { responseList = [] } = payload;
-      state.lastBlock = responseList;
+      console.log(responseList);
+      state.lastBlock = responseList.map((item) => ({
+        ...item,
+        scendsTakenTo: scendsTakenTo(
+          new Date(item.createTime).getTime()
+        )
+      }));
     },
     getLastTransactions(state, { payload = {} }) {
       const { responseList = [] } = payload;
-      state.lastTransactions = responseList;
+      state.lastTransactions = responseList.map((item) => ({
+        ...item,
+        scendsTakenTo: scendsTakenTo(
+          new Date(item.createTime).getTime()
+        )
+      }));
     },
     getInitState(state) {
       Object.assign(state, {
@@ -294,7 +369,12 @@ const homeSlice = toolkit.createSlice({
     }
   }
 });
-const { getInitState: getInitState$6, getCountDetail, getLastBlock, getLastTransactions } = homeSlice.actions;
+const {
+  getInitState: getInitState$6,
+  getCountDetail,
+  getLastBlock,
+  getLastTransactions
+} = homeSlice.actions;
 const asyncGetCountDetail = () => (dispatch) => {
   return request$1.get({ url: "/dashboard/countDetail" }).then((res) => {
     return dispatch(getCountDetail(res == null ? void 0 : res.data));
@@ -330,9 +410,9 @@ const recentInfoSlice = toolkit.createSlice({
     }
   },
   reducers: {
-    updateList(state, { payload }) {
+    updateList(state, { payload = {} }) {
       const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
-      state.list = responseList.map((item) => ({ key: item.txnHash, ...item }));
+      state.list = responseList;
       state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
     },
     updatePage(state, { payload }) {
@@ -383,12 +463,12 @@ const blockHeightSlice = toolkit.createSlice({
     info: {}
   },
   reducers: {
-    updateList(state, { payload }) {
+    updateList(state, { payload = {} }) {
       const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
       state.list = responseList.map((item) => ({ key: item.createTime, ...item }));
       state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
     },
-    updatePage(state, { payload }) {
+    updatePage(state, { payload = {} }) {
       const { pageInfo } = payload;
       state.pageInfo = { ...pageInfo, ...payload };
     },
@@ -411,7 +491,7 @@ const blockHeightSlice = toolkit.createSlice({
 });
 const { updateList: updateList$3, updatePage: updatePage$3, updateInfo: updateInfo$2, getInitState: getInitState$4 } = blockHeightSlice.actions;
 const changTable$3 = (page, pageSize, hash) => async (dispatch) => {
-  dispatch(updatePage$3({ page, pageSize }));
+  dispatch(updatePage$3({ pageStart: page, pageSize }));
   dispatch(asyncGetPageList$3(hash));
 };
 const asyncGetPageList$3 = (hash = "") => (dispatch, getState) => {
@@ -424,11 +504,30 @@ const asyncGetPageList$3 = (hash = "") => (dispatch, getState) => {
     console.log(e);
   });
 };
-const asyncGetDetail$1 = (id = "") => async (dispatch, getState) => {
+const asyncGetDetail$1 = (id2 = "") => async (dispatch, getState) => {
   const { main: main2 } = getState();
-  const address = id ? id : main2.routeParam.type;
+  const address = id2 ? id2 : main2.routeParam.type;
   const res = await request$1.post({ url: "/dashboard/search", query: { address } });
   dispatch(updateInfo$2((res == null ? void 0 : res.data) || {}));
+};
+const downTrans$3 = () => (dispatch, getState) => {
+  const { blockHeight: blockHeight2 } = getState();
+  const { pageInfo, info } = blockHeight2;
+  const { pageStart, pageSize } = pageInfo;
+  request$1.post({
+    url: "/sys/file/downloadFileByPage",
+    query: {
+      file: {
+        mapperId: "transactionsService"
+      },
+      content: {
+        blockHeight: info.address,
+        pageStart,
+        pageSize
+      }
+    },
+    isDownLoad: true
+  });
 };
 var blockHeight = blockHeightSlice.reducer;
 const contractDetailSlice = toolkit.createSlice({
@@ -445,13 +544,10 @@ const contractDetailSlice = toolkit.createSlice({
     info: {}
   },
   reducers: {
-    updateDetail(state, { payload }) {
-      state.detail = payload;
-    },
     updateInfo(state, { payload }) {
       state.info = payload;
     },
-    updateList(state, { payload }) {
+    updateList(state, { payload = {} }) {
       const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
       state.list = responseList.map((item) => ({ key: item.createTime, ...item }));
       state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
@@ -475,28 +571,45 @@ const contractDetailSlice = toolkit.createSlice({
     }
   }
 });
-const { updateList: updateList$2, updatePage: updatePage$2, updateDetail: updateDetail$2, getInitState: getInitState$3, updateInfo: updateInfo$1 } = contractDetailSlice.actions;
+const { updateList: updateList$2, updatePage: updatePage$2, getInitState: getInitState$3, updateInfo: updateInfo$1 } = contractDetailSlice.actions;
 const changTable$2 = (page, pageSize, hash) => async (dispatch) => {
-  dispatch(updatePage$2({ page, pageSize }));
+  dispatch(updatePage$2({ pageStart: page, pageSize }));
   dispatch(asyncGetPageList$2(hash));
 };
-const asyncGetPageList$2 = (id = "") => (dispatch, getState) => {
+const asyncGetPageList$2 = (id2 = "") => (dispatch, getState) => {
   const { main: main2, contractDetail: contractDetail2 } = getState();
   const { pageInfo } = contractDetail2;
-  const nfrIds = id ? id : main2.routeParam.type;
+  const nfrIds = id2 ? id2 : main2.routeParam.type;
   return request$1.post({ url: "/transactions/queryByPage", query: { address: nfrIds, ...pageInfo } }).then((res) => {
     return dispatch(updateList$2((res == null ? void 0 : res.data) || {}));
   }).catch((e) => {
     console.log(e);
   });
 };
-const asyncGetNfrDetail$2 = (id = "") => async (dispatch, getState) => {
-  const { main: main2, contractDetail: contractDetail2 } = getState();
-  const nfrIds = id ? id : main2.routeParam.type;
-  const infoRes = await request$1.post({ url: "/nfr/queryInfo", query: { tokenId: nfrIds } });
-  dispatch(updateDetail$2((infoRes == null ? void 0 : infoRes.data) || {}));
+const asyncGetContractDetail = (id2 = "") => async (dispatch, getState) => {
+  const { main: main2 } = getState();
+  const nfrIds = id2 ? id2 : main2.routeParam.type;
   const res = await request$1.post({ url: "/dashboard/search", query: { address: nfrIds } });
   dispatch(updateInfo$1((res == null ? void 0 : res.data) || {}));
+};
+const downTrans$2 = () => (dispatch, getState) => {
+  const { blockHeight: blockHeight2 } = getState();
+  const { pageInfo, info } = blockHeight2;
+  const { pageStart, pageSize } = pageInfo;
+  request$1.post({
+    url: "/sys/file/downloadFileByPage",
+    query: {
+      file: {
+        mapperId: "transactionsService"
+      },
+      content: {
+        blockHeight: info.address,
+        pageStart,
+        pageSize
+      }
+    },
+    isDownLoad: true
+  });
 };
 var contractDetail = contractDetailSlice.reducer;
 const walletDetailSlice = toolkit.createSlice({
@@ -512,10 +625,10 @@ const walletDetailSlice = toolkit.createSlice({
     info: {}
   },
   reducers: {
-    updateInfo(state, { payload }) {
+    updateInfo(state, { payload = {} }) {
       state.info = payload;
     },
-    updateList(state, { payload }) {
+    updateList(state, { payload = {} }) {
       const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
       state.list = responseList.map((item) => ({ key: item.createTime, ...item }));
       state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
@@ -540,25 +653,44 @@ const walletDetailSlice = toolkit.createSlice({
 });
 const { updateList: updateList$1, getInitState: getInitState$2, updatePage: updatePage$1, updateInfo } = walletDetailSlice.actions;
 const changTable$1 = (page, pageSize, hash) => async (dispatch) => {
-  dispatch(updatePage$1({ page, pageSize }));
+  dispatch(updatePage$1({ pageStart: page, pageSize }));
   dispatch(asyncGetPageList$1(hash));
 };
-const asyncGetPageList$1 = (id = "") => (dispatch, getState) => {
+const asyncGetPageList$1 = (id2 = "") => (dispatch, getState) => {
   const { main: main2, walletDetail: walletDetail2 } = getState();
   const { pageInfo } = walletDetail2;
   const { pageStart, pageSize } = pageInfo;
-  const nfrIds = id ? id : main2.routeParam.type;
+  const nfrIds = id2 ? id2 : main2.routeParam.type;
   return request$1.post({ url: "/transactions/queryByPage", query: { address: nfrIds, pageStart, pageSize } }).then((res) => {
     return dispatch(updateList$1(res == null ? void 0 : res.data));
   }).catch((e) => {
     console.log(e);
   });
 };
-const asyncGetNfrDetail$1 = (id = "") => async (dispatch, getState) => {
+const asyncGetNfrDetail$1 = (id2 = "") => async (dispatch, getState) => {
   const { main: main2 } = getState();
-  const walletId = id ? id : main2.routeParam.type;
+  const walletId = id2 ? id2 : main2.routeParam.type;
   const info = await request$1.post({ url: "/dashboard/search", query: { address: walletId } });
   dispatch(updateInfo((info == null ? void 0 : info.data) || {}));
+};
+const downTrans$1 = () => (dispatch, getState) => {
+  const { blockHeight: blockHeight2 } = getState();
+  const { pageInfo, info } = blockHeight2;
+  const { pageStart, pageSize } = pageInfo;
+  request$1.post({
+    url: "/sys/file/downloadFileByPage",
+    query: {
+      file: {
+        mapperId: "transactionsService"
+      },
+      content: {
+        blockHeight: info.address,
+        pageStart,
+        pageSize
+      }
+    },
+    isDownLoad: true
+  });
 };
 var walletDetail = walletDetailSlice.reducer;
 const nfrDetailSlice = toolkit.createSlice({
@@ -574,10 +706,10 @@ const nfrDetailSlice = toolkit.createSlice({
     detail: {}
   },
   reducers: {
-    updateDetail(state, { payload }) {
+    updateDetail(state, { payload = {} }) {
       state.detail = payload || {};
     },
-    updateList(state, { payload }) {
+    updateList(state, { payload = {} }) {
       const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
       state.list = responseList.map((item) => ({ key: item.createTime, ...item }));
       state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
@@ -602,26 +734,45 @@ const nfrDetailSlice = toolkit.createSlice({
 });
 const { updateList, updatePage, getInitState: getInitState$1, updateDetail: updateDetail$1 } = nfrDetailSlice.actions;
 const changTable = (page, pageSize, hash) => async (dispatch) => {
-  dispatch(updatePage({ page, pageSize }));
+  dispatch(updatePage({ pageStart: page, pageSize }));
   dispatch(asyncGetPageList(hash));
 };
-const asyncGetPageList = (id = "") => (dispatch, getState) => {
+const asyncGetPageList = (id2 = "") => (dispatch, getState) => {
   const { main: main2, nfrDetail: nfrDetail2 } = getState();
   const { pageInfo } = nfrDetail2;
-  const nfrIds = id ? id : main2.routeParam.type;
+  const nfrIds = id2 ? id2 : main2.routeParam.type;
   return request$1.post({ url: "/transactions/queryByPage", query: { nfrIds, ...pageInfo } }).then((res) => {
     return dispatch(updateList(res == null ? void 0 : res.data));
   }).catch((e) => {
     console.log(e);
   });
 };
-const asyncGetNfrDetail = (id = "") => (dispatch, getState) => {
+const asyncGetNfrDetail = (id2 = "") => (dispatch, getState) => {
   const { main: main2, nfrDetail: nfrDetail2 } = getState();
-  const nfrIds = id ? id : main2.routeParam.type;
+  const nfrIds = id2 ? id2 : main2.routeParam.type;
   return request$1.post({ url: "/nfr/queryInfo", query: { tokenId: nfrIds } }).then((res) => {
     return dispatch(updateDetail$1(res == null ? void 0 : res.data));
   }).catch((e) => {
     console.log(e);
+  });
+};
+const downTrans = () => (dispatch, getState) => {
+  const { nfrDetail: nfrDetail2 } = getState();
+  const { pageInfo, detail } = nfrDetail2;
+  const { pageStart, pageSize } = pageInfo;
+  request$1.post({
+    url: "/sys/file/downloadFileByPage",
+    query: {
+      file: {
+        mapperId: "transactionsService"
+      },
+      content: {
+        nfrIds: detail.nfrId,
+        pageStart,
+        pageSize
+      }
+    },
+    isDownLoad: true
   });
 };
 var nfrDetail = nfrDetailSlice.reducer;
@@ -642,11 +793,11 @@ const transactionSlice = toolkit.createSlice({
   }
 });
 const { updateDetail, getInitState } = transactionSlice.actions;
-const asyncGetDetail = (id = "") => (dispatch, getState) => {
+const asyncGetDetail = (id2 = "") => (dispatch, getState) => {
   const { main: main2, transaction: transaction2 } = getState();
-  const txnHash = id ? id : main2.routeParam.type;
+  const txnHash = id2 ? id2 : main2.routeParam.type;
   return request$1.post({ url: "/transactions/queryInfo", query: { txnHash } }).then((res) => {
-    return dispatch(updateDetail(res == null ? void 0 : res.data));
+    return dispatch(updateDetail((res == null ? void 0 : res.data) || {}));
   }).catch((e) => {
     console.log(e);
   });
@@ -673,12 +824,12 @@ function Overview(props) {
     detail = {}
   } = props;
   const {
-    recentTransactionsMap = []
+    recentTransactionsMap
   } = detail;
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
     setData(recentTransactionsMap);
-  }, [recentTransactionsMap.length]);
+  }, [(recentTransactionsMap || []).length]);
   const config = {
     data,
     xField: "date",
@@ -785,10 +936,6 @@ function Overview(props) {
     })]
   });
 }
-const scendsTakenTo = (times) => {
-  const SCENDS = 1e3;
-  return Number.parseInt((new Date().getTime() - times) / SCENDS);
-};
 var index$8 = "";
 function InfoList(props) {
   const {
@@ -825,7 +972,7 @@ function InfoList(props) {
                 children: `# ${overLenText(item.blockHeight)}`
               })
             }),
-            description: `${scendsTakenTo(new Date(item.createTime).getTime())} scends ago`
+            description: `${item.scendsTakenTo} scends ago`
           }), /* @__PURE__ */ jsxRuntime.jsx("span", {
             children: `${(_a = item == null ? void 0 : item.transactionsList) == null ? void 0 : _a.length} \u6BD4\u4EA4\u6613`
           })]
@@ -853,7 +1000,7 @@ function InfoList(props) {
               children: `# ${overLenText(item.txnHash)}`
             })
           }),
-          description: `${scendsTakenTo(new Date(item.createTime).getTime())} scends ago`
+          description: `${item.scendsTakenTo} scends ago`
         }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
           className: "briefly-wrap",
           children: [/* @__PURE__ */ jsxRuntime.jsxs("div", {
@@ -883,9 +1030,6 @@ function InfoList(props) {
     })]
   });
 }
-const isEmptyObj = (obj = {}) => {
-  return Object.keys(obj).length === 0;
-};
 var index$7 = "";
 function Home() {
   const {
@@ -1013,31 +1157,33 @@ const columns$3 = [{
 var index$6 = "";
 function BlockHeight() {
   const {
-    params
-  } = reactRouterDom.useMatch("/blockHeight/:type");
+    type = ""
+  } = reactRouterDom.useParams();
   const dispatch = reactRedux.useDispatch();
   const {
     list = [],
     pageInfo,
     info = {}
   } = reactRedux.useSelector((state) => state.blockHeight);
-  const pageType = params.type || "";
+  console.log(list, pageInfo, info);
   const {
     address = "",
     searchData = {}
   } = info;
-  console.log(searchData, list);
   React.useEffect(() => {
     if (isEmptyObj(info)) {
-      dispatch(asyncGetPageList$3(pageType));
-      dispatch(asyncGetDetail$1(pageType));
+      dispatch(asyncGetPageList$3(type));
+      dispatch(asyncGetDetail$1(type));
     }
     return () => {
       dispatch(getInitState$4());
     };
+  }, [type]);
+  const handleDown = React.useCallback(() => {
+    dispatch(downTrans$3());
   }, []);
   const pageChange = React.useCallback((page, pageSize) => {
-    dispatch(changTable$3(page, pageSize, pageType));
+    dispatch(changTable$3(page, pageSize, type));
   }, []);
   return /* @__PURE__ */ jsxRuntime.jsxs("div", {
     className: "block-height",
@@ -1060,9 +1206,19 @@ function BlockHeight() {
       }), /* @__PURE__ */ jsxRuntime.jsx("p", {
         children: searchData.hash
       })]
-    }), /* @__PURE__ */ jsxRuntime.jsx("h3", {
-      className: "title",
-      children: "\u8BE5\u9AD8\u5EA6\u4E0B\u4EA4\u6613"
+    }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
+      className: "table-title",
+      children: [/* @__PURE__ */ jsxRuntime.jsx("h3", {
+        className: "title",
+        children: "\u8BE5\u9AD8\u5EA6\u4E0B\u4EA4\u6613"
+      }), /* @__PURE__ */ jsxRuntime.jsxs(antd.Button, {
+        type: "link",
+        block: true,
+        onClick: handleDown,
+        children: ["\u5BFC\u51FA\u4E3ACSV", /* @__PURE__ */ jsxRuntime.jsx(icons.DownloadOutlined, {
+          className: "title-icon"
+        })]
+      })]
     }), /* @__PURE__ */ jsxRuntime.jsx(antd.Table, {
       dataSource: list,
       pagination: {
@@ -1071,7 +1227,8 @@ function BlockHeight() {
         pageSize: pageInfo.pageSize,
         onChange: pageChange
       },
-      columns: columns$3
+      columns: columns$3,
+      rowKey: (record) => record.txnHash
     })]
   });
 }
@@ -1118,8 +1275,8 @@ const columns$2 = [{
 var index$5 = "";
 function NfrDetail() {
   const {
-    params
-  } = reactRouterDom.useMatch("nfrDetail/:type");
+    type = ""
+  } = reactRouterDom.useParams();
   const dispatch = reactRedux.useDispatch();
   const {
     list = [],
@@ -1127,15 +1284,17 @@ function NfrDetail() {
     detail = {}
   } = reactRedux.useSelector((state) => state.nfrDetail);
   console.log(detail, list);
-  const id = params.type;
   React.useEffect(() => {
     if (isEmptyObj(detail)) {
-      dispatch(asyncGetPageList(id));
-      dispatch(asyncGetNfrDetail(id));
+      dispatch(asyncGetPageList(type));
+      dispatch(asyncGetNfrDetail(type));
     }
     return () => {
       dispatch(getInitState$1());
     };
+  }, []);
+  const handleDown = React.useCallback(() => {
+    dispatch(downTrans());
   }, []);
   const pageChange = React.useCallback((page, pageSize) => {
     dispatch(changTable(page, pageSize, id));
@@ -1212,7 +1371,7 @@ function NfrDetail() {
           })
         }), /* @__PURE__ */ jsxRuntime.jsx(antd.Col, {
           children: /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
-            to: "",
+            to: `/contractDetail/${detail.creatorAddress}`,
             children: detail.creatorAddress
           })
         })]
@@ -1225,10 +1384,20 @@ function NfrDetail() {
             children: "\u7C7B\u578B"
           })
         }), /* @__PURE__ */ jsxRuntime.jsx(antd.Col, {
-          children: /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
-            to: "",
-            children: detail.nfrProtocol
-          })
+          children: detail.nfrProtocol
+        })]
+      })]
+    }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
+      className: "table-title",
+      children: [/* @__PURE__ */ jsxRuntime.jsx("h3", {
+        className: "title",
+        children: "\u4EA4\u6613\u8BB0\u5F55"
+      }), /* @__PURE__ */ jsxRuntime.jsxs(antd.Button, {
+        type: "link",
+        block: true,
+        onClick: handleDown,
+        children: ["\u5BFC\u51FA\u4E3ACSV", /* @__PURE__ */ jsxRuntime.jsx(icons.DownloadOutlined, {
+          className: "title-icon"
         })]
       })]
     }), /* @__PURE__ */ jsxRuntime.jsx(antd.Table, {
@@ -1239,7 +1408,8 @@ function NfrDetail() {
         pageSize: pageInfo.pageSize,
         onChange: pageChange
       },
-      columns: columns$2
+      columns: columns$2,
+      rowKey: (record) => record.txnHash
     })]
   });
 }
@@ -1312,13 +1482,12 @@ const columns$1 = [{
 var index$4 = "";
 function ContractDetail() {
   const {
-    params
-  } = reactRouterDom.useMatch("contractDetail/:type");
+    type = ""
+  } = reactRouterDom.useParams();
   const dispatch = reactRedux.useDispatch();
   const {
     list = [],
     pageInfo,
-    detail = {},
     info = {}
   } = reactRedux.useSelector((state) => state.contractDetail);
   const {
@@ -1326,30 +1495,29 @@ function ContractDetail() {
     walletCount,
     transactionCount
   } = info.searchData || {};
-  const id = params.type;
   React.useEffect(() => {
     if (isEmptyObj(info)) {
-      dispatch(asyncGetPageList$2(id));
-      dispatch(asyncGetNfrDetail$2(id));
+      dispatch(asyncGetPageList$2(type));
+      dispatch(asyncGetContractDetail(type));
     }
     return () => {
       dispatch(getInitState$3());
     };
   }, []);
+  const handleDown = React.useCallback(() => {
+    dispatch(downTrans$2());
+  }, []);
   const pageChange = React.useCallback((page, pageSize) => {
-    dispatch(changTable$2(page, pageSize, id));
+    dispatch(changTable$2(page, pageSize, type));
   }, []);
   return /* @__PURE__ */ jsxRuntime.jsxs("div", {
     className: "contract-detail",
-    children: [/* @__PURE__ */ jsxRuntime.jsxs("div", {
+    children: [/* @__PURE__ */ jsxRuntime.jsx("div", {
       className: "contract-title",
-      children: [/* @__PURE__ */ jsxRuntime.jsx("h3", {
-        className: "title",
-        children: detail.name
-      }), /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
+      children: /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
         to: "",
         children: `\u5408\u7EA6\uFF1A${info.address}`
-      })]
+      })
     }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
       className: "detail-info",
       children: [/* @__PURE__ */ jsxRuntime.jsxs(antd.Row, {
@@ -1399,6 +1567,19 @@ function ContractDetail() {
           })
         })]
       })]
+    }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
+      className: "table-title",
+      children: [/* @__PURE__ */ jsxRuntime.jsx("h3", {
+        className: "title",
+        children: "\u4EA4\u6613\u8BB0\u5F55"
+      }), /* @__PURE__ */ jsxRuntime.jsxs(antd.Button, {
+        type: "link",
+        block: true,
+        onClick: handleDown,
+        children: ["\u5BFC\u51FA\u4E3ACSV", /* @__PURE__ */ jsxRuntime.jsx(icons.DownloadOutlined, {
+          className: "title-icon"
+        })]
+      })]
     }), /* @__PURE__ */ jsxRuntime.jsx(antd.Table, {
       dataSource: list,
       pagination: {
@@ -1412,7 +1593,7 @@ function ContractDetail() {
   });
 }
 ContractDetail.getInitialProps = () => {
-  return [asyncGetPageList$2(), asyncGetNfrDetail$2()];
+  return [asyncGetPageList$2(), asyncGetContractDetail()];
 };
 const columns = [{
   title: "\u65F6\u95F4",
@@ -1486,30 +1667,32 @@ const columns = [{
 var index$3 = "";
 function WalletDetail() {
   const {
-    params
-  } = reactRouterDom.useMatch("walletDetail/:type");
+    type = ""
+  } = reactRouterDom.useParams();
   const dispatch = reactRedux.useDispatch();
   const {
     list = [],
     pageInfo,
     info = {}
   } = reactRedux.useSelector((state) => state.walletDetail);
-  const id = params.type;
   React.useEffect(() => {
     if (isEmptyObj(info)) {
-      dispatch(asyncGetPageList$1(id));
-      dispatch(asyncGetNfrDetail$1(id));
+      dispatch(asyncGetPageList$1(type));
+      dispatch(asyncGetNfrDetail$1(type));
     }
     return () => {
       dispatch(getInitState$2());
     };
+  }, []);
+  const handleDown = React.useCallback(() => {
+    dispatch(downTrans$1());
   }, []);
   const {
     nfrCount,
     nfrUriList
   } = info.searchData || {};
   const pageChange = React.useCallback((page, pageSize) => {
-    dispatch(changTable$1(page, pageSize, id));
+    dispatch(changTable$1(page, pageSize, type));
   }, []);
   return /* @__PURE__ */ jsxRuntime.jsxs("div", {
     className: "wallet-detail",
@@ -1526,9 +1709,19 @@ function WalletDetail() {
         children: "\u7528\u6237\u603B\u89C8"
       }), /* @__PURE__ */ jsxRuntime.jsxs("p", {
         children: ["\u5171\u6301\u6709NFR\uFF1A ", nfrCount]
-      }), /* @__PURE__ */ jsxRuntime.jsx("h3", {
-        className: "title",
-        children: "\u4EA4\u6613\u8BB0\u5F55"
+      }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
+        className: "table-title",
+        children: [/* @__PURE__ */ jsxRuntime.jsx("h3", {
+          className: "title",
+          children: "\u4EA4\u6613\u8BB0\u5F55"
+        }), /* @__PURE__ */ jsxRuntime.jsxs(antd.Button, {
+          type: "link",
+          block: true,
+          onClick: handleDown,
+          children: ["\u5BFC\u51FA\u4E3ACSV", /* @__PURE__ */ jsxRuntime.jsx(icons.DownloadOutlined, {
+            className: "title-icon"
+          })]
+        })]
       }), /* @__PURE__ */ jsxRuntime.jsx(antd.Table, {
         dataSource: list,
         pagination: {
@@ -1545,6 +1738,7 @@ function WalletDetail() {
 WalletDetail.getInitialProps = () => {
   return [asyncGetPageList$1(), asyncGetNfrDetail$1()];
 };
+const CREATE = "create";
 const MINT = "mint";
 const MINT_BATCH = "mintBatch";
 const TRANSFER = "transfer";
@@ -1552,6 +1746,9 @@ const TRANSFER_BATCH = "transferBatch";
 const BURN = "burn";
 const BURN_BATCH = "burnBatch";
 const transactionEnum = {
+  [CREATE]: {
+    title: "\u521B\u5EFA"
+  },
   [MINT]: {
     title: "\u94F8\u9020"
   },
@@ -1578,58 +1775,60 @@ const transactionEnum = {
 const MAX_SHOW = 5;
 function TransResult(props) {
   var _a;
-  console.log("props:::", props);
   const {
     toAddress,
     method,
     nfrList = []
   } = props;
   const [showAll, setShowAll] = React.useState(nfrList <= MAX_SHOW);
+  console.log(toAddress, method, nfrList);
   function toggleShow() {
     setShowAll(!showAll);
   }
   return /* @__PURE__ */ jsxRuntime.jsxs("div", {
     children: [/* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
-      to: `walletDetail/${toAddress}`,
+      to: `/walletDetail/${toAddress}`,
       children: toAddress
-    }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
-      className: "direct-title",
-      children: [/* @__PURE__ */ jsxRuntime.jsx(icons.ArrowDownOutlined, {}), /* @__PURE__ */ jsxRuntime.jsx("span", {
-        children: `${(_a = transactionEnum[method]) == null ? void 0 : _a.title} ${nfrList.length}\u4E2ANFT`
-      })]
-    }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
-      children: [nfrList.map((item, index2) => {
-        if (!showAll && index2 > MAX_SHOW - 1) {
-          return null;
-        }
-        return /* @__PURE__ */ jsxRuntime.jsxs("div", {
-          className: "flow-wrap",
-          children: [/* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
-            to: `/nfrDetail/${item.id}`,
-            children: `[${item.name || item.id}]`
-          }), method !== MINT || method !== MINT_BATCH ? /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, {
-            children: [/* @__PURE__ */ jsxRuntime.jsx(icons.SwapRightOutlined, {
-              className: "direct-icon"
-            }), /* @__PURE__ */ jsxRuntime.jsx("span", {
-              children: transactionEnum[method].label
-            }), /* @__PURE__ */ jsxRuntime.jsx(antd.Popover, {
-              content: item.to,
-              children: /* @__PURE__ */ jsxRuntime.jsx(NavigateAddress, {
-                address: item.to
-              })
-            })]
-          }) : ""]
-        }, item.id);
-      }), nfrList.length > MAX_SHOW ? /* @__PURE__ */ jsxRuntime.jsxs("div", {
-        children: [/* @__PURE__ */ jsxRuntime.jsx("span", {
-          children: `...\u7B49${nfrList.length - MAX_SHOW}\u4E2A`
-        }), /* @__PURE__ */ jsxRuntime.jsx(antd.Button, {
-          type: "link",
-          onClick: toggleShow,
-          children: showAll ? "\u6536\u8D77" : "\u5C55\u5F00"
+    }), method !== CREATE ? /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, {
+      children: [/* @__PURE__ */ jsxRuntime.jsxs("div", {
+        className: "direct-title",
+        children: [/* @__PURE__ */ jsxRuntime.jsx(icons.ArrowDownOutlined, {}), /* @__PURE__ */ jsxRuntime.jsx("span", {
+          children: `${(_a = transactionEnum[method]) == null ? void 0 : _a.title} ${nfrList.length}\u4E2ANFT`
         })]
-      }) : null]
-    })]
+      }), /* @__PURE__ */ jsxRuntime.jsxs("div", {
+        children: [nfrList.map((item, index2) => {
+          if (!showAll && index2 > MAX_SHOW - 1) {
+            return null;
+          }
+          return /* @__PURE__ */ jsxRuntime.jsxs("div", {
+            className: "flow-wrap",
+            children: [/* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
+              to: `/nfrDetail/${item.id}`,
+              children: `[${item.name || item.id}]`
+            }), method !== MINT && method !== MINT_BATCH ? /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, {
+              children: [/* @__PURE__ */ jsxRuntime.jsx(icons.SwapRightOutlined, {
+                className: "direct-icon"
+              }), /* @__PURE__ */ jsxRuntime.jsx("span", {
+                children: transactionEnum[method].label
+              }), /* @__PURE__ */ jsxRuntime.jsx(antd.Popover, {
+                content: item.to,
+                children: /* @__PURE__ */ jsxRuntime.jsx(NavigateAddress, {
+                  address: item.to
+                })
+              })]
+            }) : ""]
+          }, item.id + Math.random());
+        }), nfrList.length > MAX_SHOW ? /* @__PURE__ */ jsxRuntime.jsxs("div", {
+          children: [/* @__PURE__ */ jsxRuntime.jsx("span", {
+            children: `...\u7B49${nfrList.length - MAX_SHOW}\u4E2A`
+          }), /* @__PURE__ */ jsxRuntime.jsx(antd.Button, {
+            type: "link",
+            onClick: toggleShow,
+            children: showAll ? "\u6536\u8D77" : "\u5C55\u5F00"
+          })]
+        }) : null]
+      })]
+    }) : null]
   });
 }
 var index$2 = "";
@@ -1638,15 +1837,13 @@ const LABEL_SPAN = 2;
 const CONTENT_SPAN = 22;
 function Transaction() {
   const {
-    params
-  } = reactRouterDom.useMatch("/transaction/:type");
-  const {
-    type
-  } = params;
+    type = ""
+  } = reactRouterDom.useParams();
   const dispatch = reactRedux.useDispatch();
   const {
     detail = {}
   } = reactRedux.useSelector((state) => state.transaction);
+  console.log(detail);
   React.useEffect(() => {
     if (isEmptyObj(detail)) {
       dispatch(asyncGetDetail(type));
@@ -1659,8 +1856,11 @@ function Transaction() {
     className: "transaction-detail",
     children: [/* @__PURE__ */ jsxRuntime.jsxs("div", {
       className: "title-wrap",
-      children: [/* @__PURE__ */ jsxRuntime.jsx("h3", {
-        children: "\u4EA4\u6613\u54C8\u5E0C"
+      children: [/* @__PURE__ */ jsxRuntime.jsxs("h3", {
+        children: ["\u4EA4\u6613\u54C8\u5E0C", /* @__PURE__ */ jsxRuntime.jsx(antd.Tag, {
+          color: "green",
+          children: "\u4EA4\u6613\u6210\u529F"
+        })]
       }), /* @__PURE__ */ jsxRuntime.jsx("span", {
         children: detail.txnHash
       })]
@@ -1696,7 +1896,7 @@ function Transaction() {
           children: /* @__PURE__ */ jsxRuntime.jsx(CopyText, {
             text: `${detail.toAddress}`,
             children: /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
-              to: `/contract/${detail.toAddress}`,
+              to: `/contractDetail/${detail.toAddress}`,
               children: detail.toAddress
             })
           })
@@ -1707,12 +1907,19 @@ function Transaction() {
           className: "label",
           span: LABEL_SPAN,
           children: "\u533A\u5757\u9AD8\u5EA6"
-        }), /* @__PURE__ */ jsxRuntime.jsx(antd.Col, {
+        }), /* @__PURE__ */ jsxRuntime.jsxs(antd.Col, {
           span: CONTENT_SPAN,
-          children: /* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
+          children: [/* @__PURE__ */ jsxRuntime.jsx(reactRouterDom.Link, {
             to: `/blockHeight/${detail.blockHeight}`,
             children: `# ${detail.blockHeight}`
-          })
+          }), /* @__PURE__ */ jsxRuntime.jsx(icons.ClockCircleOutlined, {
+            style: {
+              marginRight: 12,
+              marginLeft: 12
+            }
+          }), /* @__PURE__ */ jsxRuntime.jsx("span", {
+            children: `${formatSeconds(scendsTakenTo(new Date(detail.createTime).getTime()))} ago(${detail.createTime})`
+          })]
         })]
       }), /* @__PURE__ */ jsxRuntime.jsxs(antd.Row, {
         gutter: GUTTER,
@@ -1866,25 +2073,24 @@ const PAGE_CONFIG = {
 var index$1 = "";
 function RecentInfo() {
   const {
-    params
-  } = reactRouterDom.useMatch("/recentInfo/:type");
+    type = BLOCK_TYPE
+  } = reactRouterDom.useParams();
   const dispatch = reactRedux.useDispatch();
   const {
     list = [],
     pageInfo
   } = reactRedux.useSelector((state) => state.recentInfo);
-  const pageType = params.type || BLOCK_TYPE;
+  console.log(list);
   React.useEffect(() => {
-    console.log(list);
-    if (list.length) {
-      dispatch(asyncGetPageList$4(pageType));
+    if (!list.length) {
+      dispatch(asyncGetPageList$4(type));
     }
     return () => {
       dispatch(getInitState$5());
     };
   }, []);
   const pageChange = React.useCallback((page, pageSize) => {
-    dispatch(changTable$4(page, pageSize, pageType));
+    dispatch(changTable$4(page, pageSize, type));
   }, []);
   return /* @__PURE__ */ jsxRuntime.jsxs("div", {
     className: "recent-info",
@@ -1895,8 +2101,9 @@ function RecentInfo() {
       })
     }), /* @__PURE__ */ jsxRuntime.jsx("h3", {
       className: "title",
-      children: PAGE_CONFIG[pageType].title
+      children: PAGE_CONFIG[type].title
     }), /* @__PURE__ */ jsxRuntime.jsx(antd.Table, {
+      columns: PAGE_CONFIG[type].tableColumns,
       dataSource: list,
       pagination: {
         total: pageInfo.totalElements,
@@ -1904,8 +2111,10 @@ function RecentInfo() {
         pageSize: pageInfo.pageSize,
         onChange: pageChange
       },
-      columns: PAGE_CONFIG[pageType].tableColumns,
-      rowClassName: "editable-row"
+      rowKey: ({
+        txnHash,
+        blockHeight: blockHeight2
+      }) => txnHash || blockHeight2
     })]
   });
 }

@@ -4,7 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import columns from './constants';
-import isEmptyObj from '~/utils/isEmptyObj';
+import {isEmptyObj} from 'utils';
 import { asyncGetPageList, changTable, getInitState, asyncGetNfrDetail, downTrans } from '../../store/features/nfrDetail';
 import './index.less';
 

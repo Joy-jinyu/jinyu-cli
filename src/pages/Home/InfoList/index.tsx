@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { List, Button, Popover, } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
 import { NavigateAddress } from '@';
-import overLenTextShow from '~/utils/overLenTextShow'
+import {overLenTextShow} from 'utils'
 import './index.less'
 
 interface DataType {

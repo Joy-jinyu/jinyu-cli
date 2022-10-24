@@ -28,6 +28,9 @@
             "request": [
                 "./src/utils/request.ts"
             ],
+            "utils": [
+                "./src/utils/index.ts"
+            ],
             "~": [
                 "./src/*"
             ]

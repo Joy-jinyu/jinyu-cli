@@ -17,20 +17,24 @@ export const transactionSlice = createSlice({
                 detail: {}
             });
         }
-    },
+    }
 });
 
 export const { updateDetail, getInitState } = transactionSlice.actions;
 // 获取页面总览数据
-export const asyncGetDetail = (id = '') => (dispatch: any, getState) => {
-    const { main, transaction } = getState();
-    const txnHash = id ? id : main.routeParam.type;
-    return request.post({ url: '/transactions/queryInfo', query: { txnHash } })
-        .then(res => {
-            return dispatch(updateDetail(res?.data));
-        }).catch((e) => {
-            console.log(e);
-        })
-}
+export const asyncGetDetail =
+    (id = '') =>
+    (dispatch: any, getState) => {
+        const { main, transaction } = getState();
+        const txnHash = id ? id : main.routeParam.type;
+        return request
+            .post({ url: '/transactions/queryInfo', query: { txnHash } })
+            .then(res => {
+                return dispatch(updateDetail(res?.data || {}));
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 
 export default transactionSlice.reducer;

@@ -3,7 +3,7 @@ import { Table, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import isEmptyObj from '~/utils/isEmptyObj';
+import {isEmptyObj} from 'utils';
 import columns from './constants';
 import { asyncGetPageList, changTable, getInitState, asyncGetNfrDetail, downTrans } from '../../store/features/walletDetail';
 import './index.less';

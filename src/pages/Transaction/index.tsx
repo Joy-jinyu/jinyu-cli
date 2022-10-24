@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { Row, Col, Tag } from 'antd';
 import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import isEmptyObj from '~/utils/isEmptyObj';
+import {isEmptyObj, formatSeconds, scendsTakenTo} from 'utils';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import { asyncGetDetail, getInitState } from '../../store/features/transaction';
 import TransResult from './TransResult';
 import { CopyText } from '@';
@@ -54,6 +55,8 @@ function Transaction() {
                         <Link to={`/blockHeight/${detail.blockHeight}`}>
                             {`# ${detail.blockHeight}`}
                         </Link>
+                        <ClockCircleOutlined style={{marginRight: 12, marginLeft: 12 }} />
+                        <span>{`${formatSeconds(scendsTakenTo(new Date(detail.createTime).getTime()))} ago(${detail.createTime})`}</span>
                     </Col>
                 </Row>
                 <Row gutter={GUTTER}>

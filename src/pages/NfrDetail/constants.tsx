@@ -1,6 +1,6 @@
 import { Popover } from 'antd';
 import { Link } from 'react-router-dom';
-import overLenTextShow from '~/utils/overLenTextShow';
+import {overLenTextShow} from 'utils';
 export const columns = [
     {
         title: '时间',

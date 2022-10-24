@@ -3,7 +3,7 @@ import { Table, Button } from 'antd';
 import { ClockCircleOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import isEmptyObj from '~/utils/isEmptyObj';
+import {isEmptyObj} from 'utils';
 import { CommonSearch } from '@';
 import { asyncGetPageList, changTable, asyncGetDetail, getInitState, downTrans } from '../../store/features/blockHeight';
 import { columns } from './constants';
@@ -24,7 +24,7 @@ function BlockHeight() {
         return () => {
             dispatch(getInitState());
         }
-    }, []);
+    }, [type]);
     const handleDown = useCallback(() => {
         dispatch(downTrans());
     }, []);

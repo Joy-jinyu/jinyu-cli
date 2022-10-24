@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button } from 'antd';
 import useSearchNavigate from '~/hooks/useSearchNavigate';
-import overLenTextShow from '~/utils/overLenTextShow';
+import {overLenTextShow} from 'utils';
 
 function NavigateAddress(props) {
     const { address } = props;

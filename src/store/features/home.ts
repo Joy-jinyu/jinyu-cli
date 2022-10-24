@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import scendsTakenTo from '~/utils/scendsTakenTo';
+import { scendsTakenTo } from 'utils';
 import request from 'request';
 
 export const homeSlice = createSlice({
@@ -11,21 +11,25 @@ export const homeSlice = createSlice({
     },
     reducers: {
         getCountDetail(state, { payload = {} }) {
-            state.countDetail = payload
+            state.countDetail = payload;
         },
         getLastBlock(state, { payload = {} }) {
             const { responseList = [] } = payload;
             console.log(responseList);
-            state.lastBlock = responseList.map((item) => ({
+            state.lastBlock = responseList.map(item => ({
                 ...item,
-                scendsTakenTo: scendsTakenTo(new Date(item.createTime).getTime())
+                scendsTakenTo: scendsTakenTo(
+                    new Date(item.createTime).getTime()
+                )
             }));
         },
         getLastTransactions(state, { payload = {} }) {
             const { responseList = [] } = payload;
-            state.lastTransactions = responseList.map((item) => ({
+            state.lastTransactions = responseList.map(item => ({
                 ...item,
-                scendsTakenTo: scendsTakenTo(new Date(item.createTime).getTime())
+                scendsTakenTo: scendsTakenTo(
+                    new Date(item.createTime).getTime()
+                )
             }));
         },
         getInitState(state) {
@@ -35,37 +39,48 @@ export const homeSlice = createSlice({
                 lastTransactions: []
             });
         }
-    },
+    }
 });
 
-export const { getInitState, getCountDetail, getLastBlock, getLastTransactions } = homeSlice.actions;
+export const {
+    getInitState,
+    getCountDetail,
+    getLastBlock,
+    getLastTransactions
+} = homeSlice.actions;
 
 // 获取页面总览数据
 export const asyncGetCountDetail = () => (dispatch: any) => {
-    return request.get({ url: '/dashboard/countDetail' })
+    return request
+        .get({ url: '/dashboard/countDetail' })
         .then(res => {
             return dispatch(getCountDetail(res?.data));
-        }).catch((e) => {
-            console.log(e);
         })
-}
+        .catch(e => {
+            console.log(e);
+        });
+};
 // 获取最近出块
 export const asyncGetLastBlock = () => (dispatch: any) => {
-    return request.get({ url: '/block/getLastBlock' })
+    return request
+        .get({ url: '/block/getLastBlock' })
         .then(res => {
             return dispatch(getLastBlock(res?.data));
-        }).catch((e) => {
-            console.log(e);
         })
-}
+        .catch(e => {
+            console.log(e);
+        });
+};
 // 获取最近交易
 export const asyncGetLastTransactions = () => (dispatch: any) => {
-    return request.get({ url: '/transactions/getLastTransactions' })
+    return request
+        .get({ url: '/transactions/getLastTransactions' })
         .then(res => {
             return dispatch(getLastTransactions(res?.data));
-        }).catch((e) => {
-            console.log(e);
         })
-}
+        .catch(e => {
+            console.log(e);
+        });
+};
 
 export default homeSlice.reducer;

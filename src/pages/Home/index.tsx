@@ -4,7 +4,7 @@ import Overview from './Overview'
 import InfoList from './InfoList'
 import { useSelector, useDispatch } from 'react-redux'
 import { CommonSearch } from '@';
-import isEmptyObj from '~/utils/isEmptyObj';
+import {isEmptyObj} from 'utils';
 import { asyncGetCountDetail, getInitState, asyncGetLastBlock, asyncGetLastTransactions } from '../../store/features/home'
 import './index.less'
 import request from 'request'
