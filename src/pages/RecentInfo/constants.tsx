@@ -33,8 +33,8 @@ export const PAGE_CONFIG = {
             },
             {
                 title: '交易比数',
-                dataIndex: 'transactions',
-                render: transactions => (transactions || []).length,
+                dataIndex: 'transactionsList',
+                render: transactionsList => (transactionsList || []).length,
             },
         ],
     },
