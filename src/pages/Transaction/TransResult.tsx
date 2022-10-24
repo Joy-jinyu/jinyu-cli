@@ -19,7 +19,7 @@ function TransResult(props) {
                 <>
                     <div className='direct-title'>
                         <ArrowDownOutlined />
-                        <span>{`${transactionEnum[method]?.title} ${nfrList.length}个NFT`}</span>
+                        <span>{`${transactionEnum[method]?.title} ${nfrList.reduce((total, cur) => (total + Number(cur.amount)), 0)}个NFT`}</span>
                     </div>
                     <div>
                         {
@@ -29,7 +29,8 @@ function TransResult(props) {
                                 }
 
                                 return (<div className="flow-wrap" key={item.id + Math.random()}>
-                                    <Link to={`/nfrDetail/${item.id}`}>{`[${item.name || item.id}]`}</Link>
+                                    <Link to={`/nfrDetail/${item.id}/${toAddress}`}>{`[${item.name || item.id}]`}</Link>
+                                    <span>{` x ${item.amount}`}</span>
                                     {
                                         (method !== MINT && method !== MINT_BATCH) ? <>
                                             <SwapRightOutlined className="direct-icon" />

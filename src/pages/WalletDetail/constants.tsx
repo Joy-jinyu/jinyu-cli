@@ -43,24 +43,24 @@ export const columns = [
     },
     {
         title: 'NFR',
-        dataIndex: 'nfrIds',
-        key: 'nfrIds',
-        render(nfrIds = []) {
+        dataIndex: 'nfrList',
+        key: 'nfrList',
+        render(nfrIds = [], record) {
             if (nfrIds.length === 1) {
                 const nfr = nfrIds[0];
-                return <Link to={`/nfrDetail/${nfr.id}`}>{nfr.name}</Link>
+                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.name}</Link>
             }
             return '--';
         }
     },
     {
         title: 'NFRID',
-        dataIndex: 'nfrIds',
-        key: 'nfrId',
-        render(nfrIds = []) {
+        dataIndex: 'nfrList',
+        key: 'nfrList',
+        render(nfrIds = [], record) {
             if (nfrIds.length === 1) {
                 const nfr = nfrIds[0];
-                return <Link to={`/nfrDetail/${nfr.id}`}>{nfr.id}</Link>
+                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.id}</Link>
             }
             return '--';
         }

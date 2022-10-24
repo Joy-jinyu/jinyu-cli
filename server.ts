@@ -77,6 +77,14 @@ async function createAppServer() {
                     const method =
                         ctx.request.method.toLowerCase() as Type_Method;
                     const params = ctx.request.body;
+
+                    console.log(
+                        method,
+                        params,
+                        `${
+                            API_HOST[process.env.NODE_ENV as Env_Type]
+                        }${apiPath}`
+                    );
                     const data = await axiosIns[method](
                         `${
                             API_HOST[process.env.NODE_ENV as Env_Type]

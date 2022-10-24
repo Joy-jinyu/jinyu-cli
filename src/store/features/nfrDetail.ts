@@ -9,7 +9,7 @@ export const nfrDetailSlice = createSlice({
             pageStart: 1,
             pageSize: 10,
             totalElements: 10,
-            totalPages: 1,
+            totalPages: 1
         },
         detail: {}
     },
@@ -18,8 +18,17 @@ export const nfrDetailSlice = createSlice({
             state.detail = payload || {};
         },
         updateList(state, { payload = {} }) {
-            const { responseList = [], pageStart, pageSize, totalElements, totalPages } = payload;
-            state.list = responseList.map(item => ({ key: item.createTime, ...item }));
+            const {
+                responseList = [],
+                pageStart,
+                pageSize,
+                totalElements,
+                totalPages
+            } = payload;
+            state.list = responseList.map(item => ({
+                key: item.createTime,
+                ...item
+            }));
             state.pageInfo = { pageStart, pageSize, totalElements, totalPages };
         },
         updatePage(state, { payload }) {
@@ -33,44 +42,60 @@ export const nfrDetailSlice = createSlice({
                     pageStart: 1,
                     pageSize: 10,
                     totalElements: 10,
-                    totalPages: 1,
+                    totalPages: 1
                 },
                 detail: {}
             });
         }
-    },
+    }
 });
 
-export const { updateList, updatePage, getInitState, updateDetail } = nfrDetailSlice.actions;
+export const { updateList, updatePage, getInitState, updateDetail } =
+    nfrDetailSlice.actions;
 // 修改table
-export const changTable = (page, pageSize, hash) => async (dispatch) => {
+export const changTable = (page, pageSize, hash) => async dispatch => {
     dispatch(updatePage({ pageStart: page, pageSize }));
     dispatch(asyncGetPageList(hash));
-}
+};
 // 获取页面总览数据
-export const asyncGetPageList = (id = '') => (dispatch: any, getState) => {
-    const { main, nfrDetail } = getState();
-    const { pageInfo } = nfrDetail;
-    const nfrIds = id ? id : main.routeParam.type;
-    return request.post({ url: '/transactions/queryByPage', query: { nfrIds, ...pageInfo } })
-        .then(res => {
-            return dispatch(updateList(res?.data));
-        }).catch((e) => {
-            console.log(e);
-        })
-}
+export const asyncGetPageList =
+    (id = '') =>
+    (dispatch: any, getState) => {
+        const { main, nfrDetail } = getState();
+        const { pageInfo } = nfrDetail;
+        const nfrIds = id ? id : main.routeParam.type;
+        return request
+            .post({
+                url: '/transactions/queryByPage',
+                query: { nfrIds, ...pageInfo }
+            })
+            .then(res => {
+                return dispatch(updateList(res?.data));
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 // 获取nfr数据
-export const asyncGetNfrDetail = (id = '') => (dispatch: any, getState) => {
-    const { main, nfrDetail } = getState();
-    const { pageInfo } = nfrDetail;
-    const nfrIds = id ? id : main.routeParam.type;
-    return request.post({ url: '/nfr/queryInfo', query: { tokenId: nfrIds } })
-        .then(res => {
-            return dispatch(updateDetail(res?.data));
-        }).catch((e) => {
-            console.log(e);
-        })
-}
+export const asyncGetNfrDetail =
+    (id = '', address = '') =>
+    (dispatch: any, getState) => {
+        const { main } = getState();
+        const { type, address: contract } = main.routeParam;
+        const tokenId = id ? id : type;
+        const contractAddress = address ? address : contract;
+        return request
+            .post({
+                url: '/nfr/queryInfo',
+                query: { tokenId, contractAddress }
+            })
+            .then(res => {
+                return dispatch(updateDetail(res?.data || {}));
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 
 export const downTrans = () => (dispatch: any, getState) => {
     const { nfrDetail } = getState();
@@ -80,7 +105,7 @@ export const downTrans = () => (dispatch: any, getState) => {
         url: '/sys/file/downloadFileByPage',
         query: {
             file: {
-                mapperId: "transactionsService",
+                mapperId: 'transactionsService'
             },
             content: {
                 nfrIds: detail.nfrId,
@@ -89,7 +114,7 @@ export const downTrans = () => (dispatch: any, getState) => {
             }
         },
         isDownLoad: true
-    })
-}
+    });
+};
 
 export default nfrDetailSlice.reducer;

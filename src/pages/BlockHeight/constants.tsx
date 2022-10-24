@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Popover } from 'antd';
 import { NavigateAddress } from '@';
@@ -36,10 +37,10 @@ export const columns = [
     {
         title: 'NFR',
         dataIndex: 'nfrList',
-        render(nfrList = []) {
+        render(nfrList = [], record) {
             if (nfrList.length === 1) {
                 const nfr = nfrList[0];
-                return <Link to={`/nfrDetail/${nfr.id}`}>{nfr.name}</Link>
+                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.name}</Link>
             }
             return '--';
         }
@@ -47,10 +48,10 @@ export const columns = [
     {
         title: 'NFRID',
         dataIndex: 'nfrList',
-        render(nfrList = []) {
+        render(nfrList = [], record) {
             if (nfrList.length === 1) {
                 const nfr = nfrList[0];
-                return <Link to={`/nfrDetail/${nfr.id}`}>{nfr.id}</Link>
+                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.id}</Link>
             }
             return '--';
         }

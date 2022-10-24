@@ -40,7 +40,7 @@ export const columns = [
         render(nfrList = []) {
             if (nfrList.length === 1) {
                 const nfr = nfrList[0];
-                return <Link to={`/nfrDetail/${nfr.id}`}>{nfr.name}</Link>
+                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.name}</Link>
             }
             return '--';
         }
@@ -51,7 +51,7 @@ export const columns = [
         render(nfrList = []) {
             if (nfrList.length === 1) {
                 const nfr = nfrList[0];
-                return <Link to={`/nfrDetail/${nfr.id}`}>{nfr.id}</Link>
+                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.id}</Link>
             }
             return '--';
         }

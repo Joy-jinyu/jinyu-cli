@@ -3,7 +3,7 @@ import { Table, Button } from 'antd';
 import { ClockCircleOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import {isEmptyObj} from 'utils';
+import {isEmptyObj, formatSeconds, scendsTakenTo} from 'utils';
 import { CommonSearch } from '@';
 import { asyncGetPageList, changTable, asyncGetDetail, getInitState, downTrans } from '../../store/features/blockHeight';
 import { columns } from './constants';
@@ -39,8 +39,8 @@ function BlockHeight() {
             <div className="title-wrap">
                 <div className="head-title">
                     <span className="address">{`# ${address}`}</span>
-                    <ClockCircleOutlined />
-                    <span className="time">{searchData.createTime}</span>
+                    <ClockCircleOutlined style={{marginRight: 12}} />
+                    <span>{`${formatSeconds(scendsTakenTo(new Date(searchData.createTime).getTime()))} ago(${searchData.createTime})`}</span>
                 </div>
                 <p>{searchData.hash}</p>
             </div>
