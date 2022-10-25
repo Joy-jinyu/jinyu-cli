@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { AnyAction, createSlice, Dispatch } from '@reduxjs/toolkit';
 import { scendsTakenTo } from 'utils';
 import request from 'request';
 
@@ -15,8 +15,7 @@ export const homeSlice = createSlice({
         },
         getLastBlock(state, { payload = {} }) {
             const { responseList = [] } = payload;
-            console.log(responseList);
-            state.lastBlock = responseList.map(item => ({
+            state.lastBlock = responseList.map((item: any) => ({
                 ...item,
                 scendsTakenTo: scendsTakenTo(
                     new Date(item.createTime).getTime()
@@ -25,7 +24,7 @@ export const homeSlice = createSlice({
         },
         getLastTransactions(state, { payload = {} }) {
             const { responseList = [] } = payload;
-            state.lastTransactions = responseList.map(item => ({
+            state.lastTransactions = responseList.map((item: any) => ({
                 ...item,
                 scendsTakenTo: scendsTakenTo(
                     new Date(item.createTime).getTime()
@@ -50,10 +49,10 @@ export const {
 } = homeSlice.actions;
 
 // 获取页面总览数据
-export const asyncGetCountDetail = () => (dispatch: any) => {
+export const asyncGetCountDetail = () => (dispatch: Dispatch<AnyAction>) => {
     return request
         .get({ url: '/dashboard/countDetail' })
-        .then(res => {
+        .then((res: any) => {
             return dispatch(getCountDetail(res?.data));
         })
         .catch(e => {
@@ -61,10 +60,10 @@ export const asyncGetCountDetail = () => (dispatch: any) => {
         });
 };
 // 获取最近出块
-export const asyncGetLastBlock = () => (dispatch: any) => {
+export const asyncGetLastBlock = () => (dispatch: Dispatch<AnyAction>) => {
     return request
         .get({ url: '/block/getLastBlock' })
-        .then(res => {
+        .then((res: any) => {
             return dispatch(getLastBlock(res?.data));
         })
         .catch(e => {
@@ -72,15 +71,16 @@ export const asyncGetLastBlock = () => (dispatch: any) => {
         });
 };
 // 获取最近交易
-export const asyncGetLastTransactions = () => (dispatch: any) => {
-    return request
-        .get({ url: '/transactions/getLastTransactions' })
-        .then(res => {
-            return dispatch(getLastTransactions(res?.data));
-        })
-        .catch(e => {
-            console.log(e);
-        });
-};
+export const asyncGetLastTransactions =
+    () => (dispatch: Dispatch<AnyAction>) => {
+        return request
+            .get({ url: '/transactions/getLastTransactions' })
+            .then((res: any) => {
+                return dispatch(getLastTransactions(res?.data));
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 
 export default homeSlice.reducer;

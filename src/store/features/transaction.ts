@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { AnyAction, createSlice, Dispatch } from '@reduxjs/toolkit';
 import request from 'request';
 export const BLOCK_TYPE = 'recentBlock';
 export const TRANS_TYPE = 'recentTrans';
@@ -24,12 +24,15 @@ export const { updateDetail, getInitState } = transactionSlice.actions;
 // 获取页面总览数据
 export const asyncGetDetail =
     (id = '') =>
-    (dispatch: any, getState) => {
-        const { main, transaction } = getState();
+    (
+        dispatch: Dispatch<AnyAction | any>,
+        getState: () => { main: any; transaction: any }
+    ) => {
+        const { main } = getState();
         const txnHash = id ? id : main.routeParam.type;
         return request
             .post({ url: '/transactions/queryInfo', query: { txnHash } })
-            .then(res => {
+            .then((res: any) => {
                 return dispatch(updateDetail(res?.data || {}));
             })
             .catch(e => {

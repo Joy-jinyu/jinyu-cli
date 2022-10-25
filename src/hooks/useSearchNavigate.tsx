@@ -4,10 +4,10 @@ import request from 'request';
 
 function useSearchNavigate() {
     const navigate = useNavigate();
-    const jumpToAddress = useCallback((address) => {
+    const jumpToAddress = useCallback((address: string) => {
         request.post({ url: '/dashboard/search', query: { address } })
-            .then(res => {
-                const { code, address, message = '' } = res?.data || {};
+            .then((res: any) => {
+                const { code, address } = res['data'] || {};
                 switch (code) {
                     case 0:
                         navigate(`/walletDetail/${address}`);
@@ -24,7 +24,8 @@ function useSearchNavigate() {
                     default:
                         return ''
                 }
-            }).catch((e) => {
+            }).catch(e => {
+                console.log(e);
             })
     }, []);
 

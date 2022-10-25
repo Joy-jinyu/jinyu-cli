@@ -1,18 +1,28 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, Dispatch } from 'react';
 import { Table, Row, Col, Button } from 'antd';
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link } from 'react-router-dom';
 import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
-import {isEmptyObj} from 'utils';
+import { isEmptyObj } from 'utils';
 import columns from './constants';
-import { asyncGetPageList, changTable, asyncGetContractDetail, getInitState, downTrans } from '../../store/features/contractDetail';
+import {
+    asyncGetPageList,
+    changTable,
+    asyncGetContractDetail,
+    getInitState,
+    downTrans
+} from '../../store/features/contractDetail';
 import './index.less';
-
+import { AnyAction } from '@reduxjs/toolkit';
 
 function ContractDetail() {
     const { type = '' } = useParams();
-    const dispatch = useDispatch();
-    const { list = [], pageInfo, info = {} } = useSelector((state: any) => state.contractDetail);
+    const dispatch: Dispatch<AnyAction | any> = useDispatch();
+    const {
+        list = [],
+        pageInfo,
+        info = {}
+    } = useSelector((state: any) => state.contractDetail);
     const { tokenCount, walletCount, transactionCount } = info.searchData || {};
     useEffect(() => {
         if (isEmptyObj(info)) {
@@ -21,12 +31,12 @@ function ContractDetail() {
         }
         return () => {
             dispatch(getInitState());
-        }
-    }, [])
+        };
+    }, []);
     const handleDown = useCallback(() => {
         dispatch(downTrans());
     }, []);
-    const pageChange = useCallback((page, pageSize) => {
+    const pageChange = useCallback((page: number, pageSize: number) => {
         dispatch(changTable(page, pageSize, type));
     }, []);
     return (
@@ -34,22 +44,32 @@ function ContractDetail() {
             <div className="contract-title">
                 <Link to="">{`合约：${info.address}`}</Link>
             </div>
-            <div className='detail-info'>
+            <div className="detail-info">
                 <Row gutter={24}>
-                    <Col className="label" span={2}>总量</Col>
+                    <Col className="label" span={2}>
+                        总量
+                    </Col>
                     <Col span={22}>{tokenCount}</Col>
                 </Row>
                 <Row gutter={24}>
-                    <Col className="label" span={2}><span>持有钱包</span></Col>
+                    <Col className="label" span={2}>
+                        <span>持有钱包</span>
+                    </Col>
                     <Col>{walletCount}</Col>
                 </Row>
                 <Row gutter={24}>
-                    <Col className="label" span={2}><span>交易笔数</span></Col>
+                    <Col className="label" span={2}>
+                        <span>交易笔数</span>
+                    </Col>
                     <Col>{transactionCount}</Col>
                 </Row>
                 <Row gutter={24}>
-                    <Col className="label" span={2}><span>合约</span></Col>
-                    <Col><Link to="">{info.address}</Link></Col>
+                    <Col className="label" span={2}>
+                        <span>合约</span>
+                    </Col>
+                    <Col>
+                        <Link to="">{info.address}</Link>
+                    </Col>
                 </Row>
             </div>
             <div className="table-title">
@@ -74,7 +94,7 @@ function ContractDetail() {
 }
 
 ContractDetail.getInitialProps = () => {
-    return [asyncGetPageList(), asyncGetContractDetail()]
-}
+    return [asyncGetPageList(), asyncGetContractDetail()];
+};
 
 export default ContractDetail;

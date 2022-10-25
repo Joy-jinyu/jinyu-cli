@@ -1,18 +1,28 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, Dispatch } from 'react';
 import { Table, Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {isEmptyObj} from 'utils';
+import { isEmptyObj } from 'utils';
 import columns from './constants';
-import { asyncGetPageList, changTable, getInitState, asyncGetNfrDetail, downTrans } from '../../store/features/walletDetail';
+import {
+    asyncGetPageList,
+    changTable,
+    getInitState,
+    asyncGetNfrDetail,
+    downTrans
+} from '../../store/features/walletDetail';
 import './index.less';
-
+import { AnyAction } from '@reduxjs/toolkit';
 
 function WalletDetail() {
     const { type = '' } = useParams();
-    const dispatch = useDispatch();
-    const { list = [], pageInfo, info = {} } = useSelector((state: any) => state.walletDetail);
+    const dispatch: Dispatch<AnyAction | any> = useDispatch();
+    const {
+        list = [],
+        pageInfo,
+        info = {}
+    } = useSelector((state: any) => state.walletDetail);
 
     useEffect(() => {
         if (isEmptyObj(info)) {
@@ -22,13 +32,13 @@ function WalletDetail() {
 
         return () => {
             dispatch(getInitState());
-        }
+        };
     }, []);
     const handleDown = useCallback(() => {
         dispatch(downTrans());
     }, []);
-    const { nfrCount, nfrUriList } = info.searchData || {};
-    const pageChange = useCallback((page, pageSize) => {
+    const { nfrCount } = info.searchData || {};
+    const pageChange = useCallback((page: number, pageSize: number) => {
         dispatch(changTable(page, pageSize, type));
     }, []);
     return (
@@ -57,13 +67,12 @@ function WalletDetail() {
                     columns={columns}
                 />
             </div>
-
         </div>
     );
 }
 
 WalletDetail.getInitialProps = () => {
-    return [asyncGetPageList(), asyncGetNfrDetail()]
-}
+    return [asyncGetPageList(), asyncGetNfrDetail()];
+};
 
 export default WalletDetail;

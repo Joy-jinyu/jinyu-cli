@@ -2,45 +2,61 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Popover } from 'antd';
 import { NavigateAddress } from '@';
-import {overLenTextShow} from 'utils';
+import { overLenTextShow } from 'utils';
 export const columns = [
     {
         title: '时间',
-        dataIndex: 'createTime',
+        dataIndex: 'createTime'
     },
     {
         title: '交易哈希',
         dataIndex: 'txnHash',
-        render: txnHash => <Popover content={txnHash}>
-            <Link to={`/transaction/${txnHash}`}>{overLenTextShow(txnHash)}</Link>
-        </Popover>,
+        render: (txnHash: string) => (
+            <Popover content={txnHash}>
+                <Link to={`/transaction/${txnHash}`}>
+                    {overLenTextShow(txnHash)}
+                </Link>
+            </Popover>
+        )
     },
     {
         title: '发送方',
         dataIndex: 'fromAddress',
-        render: fromAddress => <Popover content={fromAddress}>
-            <Link to={`/walletDetail/${fromAddress}`}>{overLenTextShow(fromAddress)}</Link>
-        </Popover>,
+        render: (fromAddress: string) => (
+            <Popover content={fromAddress}>
+                <Link to={`/walletDetail/${fromAddress}`}>
+                    {overLenTextShow(fromAddress)}
+                </Link>
+            </Popover>
+        )
     },
     {
         title: '接收方',
         dataIndex: 'toAddress',
-        render: toAddress =>
+        render: (toAddress: string) => (
             <Popover content={toAddress}>
                 <NavigateAddress address={toAddress} />
-            </Popover>,
+            </Popover>
+        )
     },
     {
         title: '类型',
-        dataIndex: 'methodName',
+        dataIndex: 'methodName'
     },
     {
         title: 'NFR',
         dataIndex: 'nfrList',
-        render(nfrList = [], record) {
+        render(
+            nfrList: Array<{ id: number; name: string }> = [],
+            record: { toAddress: string; txnHash: string }
+        ) {
             if (nfrList.length === 1) {
                 const nfr = nfrList[0];
-                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.name}</Link>
+                return (
+                    <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>
+                        {nfr.name}
+                    </Link>
+                );
             }
             return '--';
         }
@@ -48,15 +64,21 @@ export const columns = [
     {
         title: 'NFRID',
         dataIndex: 'nfrList',
-        render(nfrList = [], record) {
+        render(
+            nfrList: Array<{ id: number; name: string }> = [],
+            record: { toAddress: string; txnHash: string }
+        ) {
             if (nfrList.length === 1) {
                 const nfr = nfrList[0];
-                return <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>{nfr.id}</Link>
+                return (
+                    <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>
+                        {nfr.id}
+                    </Link>
+                );
             }
             return '--';
         }
-    },
-]
-
+    }
+];
 
 export default columns;

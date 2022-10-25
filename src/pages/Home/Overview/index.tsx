@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Divider, Row } from 'antd';
 import { Line } from '@ant-design/plots';
-import './index.less'
+import './index.less';
 
 const GUTTER = 16;
 const SPAN = 6;
 interface IProps {
-    [name: string]: any;
+    detail: {
+        [name: string]: any;
+    };
 }
 function Overview(props: IProps) {
     const { detail = {} } = props;
@@ -22,8 +24,8 @@ function Overview(props: IProps) {
         yField: 'count',
         height: 116,
         xAxis: {
-            tickCount: 5,
-        },
+            tickCount: 5
+        }
     };
     return (
         <div className="overview">
@@ -33,37 +35,53 @@ function Overview(props: IProps) {
                     <Row gutter={GUTTER}>
                         <Col span={SPAN}>
                             <p className="title">交易比数</p>
-                            <p className="introduc-content">{detail.txnCount}</p>
+                            <p className="introduc-content">
+                                {detail.txnCount}
+                            </p>
                         </Col>
                         <Col span={SPAN}>
                             <p className="title">区块高度</p>
-                            <p className="introduc-content">{detail.blockHeight}</p>
+                            <p className="introduc-content">
+                                {detail.blockHeight}
+                            </p>
                         </Col>
                         <Col span={SPAN}>
                             <p className="title">平均每秒交易</p>
-                            <p className="introduc-content">{detail.avgTxnCount}</p>
+                            <p className="introduc-content">
+                                {detail.avgTxnCount}
+                            </p>
                         </Col>
                         <Col span={SPAN}>
                             <p className="title">钱包地址总量</p>
-                            <p className="introduc-content">{detail.addressCount}</p>
+                            <p className="introduc-content">
+                                {detail.addressCount}
+                            </p>
                         </Col>
                     </Row>
                     <Row gutter={GUTTER}>
                         <Col span={SPAN}>
                             <p className="title">最近24H交易比数</p>
-                            <p className="introduc-content">{detail.recentTxnCount}</p>
+                            <p className="introduc-content">
+                                {detail.recentTxnCount}
+                            </p>
                         </Col>
                         <Col span={SPAN}>
                             <p className="title">近24H出块量</p>
-                            <p className="introduc-content">{detail.recentBlockCount}</p>
+                            <p className="introduc-content">
+                                {detail.recentBlockCount}
+                            </p>
                         </Col>
                         <Col span={SPAN}>
                             <p className="title">平均出块时间</p>
-                            <p className="introduc-content">{detail.avgBlockTime}</p>
+                            <p className="introduc-content">
+                                {detail.avgBlockTime}
+                            </p>
                         </Col>
                         <Col span={SPAN}>
                             <p className="title">智能合约量</p>
-                            <p className="introduc-content">{detail.contractCount}</p>
+                            <p className="introduc-content">
+                                {detail.contractCount}
+                            </p>
                         </Col>
                     </Row>
                 </Col>
