@@ -17,10 +17,8 @@ function BlockHeight() {
     console.log(list, pageInfo, info);
     const { address = '', searchData = {} } = info;
     useEffect(() => {
-        if (isEmptyObj(info)) {
             dispatch(asyncGetPageList(type));
             dispatch(asyncGetDetail(type));
-        }
         return () => {
             dispatch(getInitState());
         }
