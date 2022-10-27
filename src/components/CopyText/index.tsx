@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { message } from 'antd';
 import Icon, { CopyOutlined } from '@ant-design/icons';
 
-function CopyText(props) {
-    function copy(data) {
+function CopyText(props: { children: ReactNode; text: string }) {
+    function copy(data: string) {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(data);
         } else {
@@ -23,8 +23,12 @@ function CopyText(props) {
     return (
         <div>
             <span style={{ marginRight: 8 }}>{props.children}</span>
-            <CopyOutlined onClick={() => { copy(props.text) }} />
-        </div >
+            <CopyOutlined
+                onClick={() => {
+                    copy(props.text);
+                }}
+            />
+        </div>
     );
 }
 

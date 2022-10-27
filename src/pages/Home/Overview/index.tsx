@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Divider, Row } from 'antd';
+import { Col, Row } from 'antd';
 import { Line } from '@ant-design/plots';
 import './index.less';
 

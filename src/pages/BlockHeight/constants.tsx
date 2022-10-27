@@ -48,12 +48,12 @@ export const columns = [
         dataIndex: 'nfrList',
         render(
             nfrList: Array<{ id: number; name: string }> = [],
-            record: { toAddress: string; txnHash: string }
+            record: { contractAddress: string; txnHash: string }
         ) {
             if (nfrList.length === 1) {
                 const nfr = nfrList[0];
                 return (
-                    <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>
+                    <Link to={`/nfrDetail/${nfr.id}/${record.contractAddress}`}>
                         {nfr.id}
                     </Link>
                 );

@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect } from 'react';
-import { Image, Input, Button } from 'antd';
+import { Image, Button } from 'antd';
 import Overview from './Overview';
 import InfoList from './InfoList';
 import { useSelector, useDispatch } from 'react-redux';

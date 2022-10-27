@@ -6,7 +6,7 @@ import { isEmptyObj, formatSeconds, scendsTakenTo } from 'utils';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { asyncGetDetail, getInitState } from '../../store/features/transaction';
 import TransResult from './TransResult';
-import { CopyText } from '@';
+import { CopyText, NavigateAddress } from '@';
 import './index.less';
 import { AnyAction } from '@reduxjs/toolkit';
 const GUTTER = 24;
@@ -54,9 +54,10 @@ function Transaction() {
                     </Col>
                     <Col span={CONTENT_SPAN}>
                         <CopyText text={`${detail.toAddress}`}>
-                            <Link to={`/contractDetail/${detail.toAddress}`}>
-                                {detail.toAddress}
-                            </Link>
+                            <NavigateAddress
+                                isWrapText={false}
+                                address={detail.toAddress}
+                            />
                         </CopyText>
                     </Col>
                 </Row>
@@ -84,6 +85,7 @@ function Transaction() {
                         <TransResult
                             toAddress={detail.toAddress}
                             method={detail.method}
+                            contractAddress={detail.contractAddress}
                             nfrList={detail?.nfrList}
                         />
                     </Col>

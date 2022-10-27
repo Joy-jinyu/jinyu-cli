@@ -1,15 +1,28 @@
 import React, { useCallback } from 'react';
 import { Button } from 'antd';
 import useSearchNavigate from '~/hooks/useSearchNavigate';
-import {overLenTextShow} from 'utils';
+import { overLenTextShow } from 'utils';
+interface IProps {
+    address: string;
+    isWrapText: boolean;
+}
 
-function NavigateAddress(props) {
-    const { address } = props;
+function NavigateAddress(props: IProps) {
+    const { address, isWrapText = true } = props;
     const jumpToAddress = useSearchNavigate();
     const handleBtn = useCallback(() => {
-        jumpToAddress(address)
+        jumpToAddress(address);
     }, [address]);
-    return <Button style={{ paddingLeft: 0 }} {...props} type='link' onClick={handleBtn}>{overLenTextShow(address)}</Button>
+    return (
+        <Button
+            style={{ paddingLeft: 0 }}
+            {...props}
+            type="link"
+            onClick={handleBtn}
+        >
+            {isWrapText ? overLenTextShow(address) : address}
+        </Button>
+    );
 }
 
 export default NavigateAddress;

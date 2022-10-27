@@ -10,40 +10,54 @@ export default function Layout(props: { routes: Array<route> }) {
 
     return (
         <Routes>
-            {
-                routes.map((route: route) => {
-                    const { path = '', PageComponent, exact = true, redirect } = route;
+            {routes.map((route: route) => {
+                const {
+                    path = '',
+                    PageComponent,
+                    exact = true,
+                    redirect
+                } = route;
 
-                    if (redirect) {
-                        return <Navigate replace={true} to={redirect} />;
-                    }
+                if (redirect) {
+                    return <Navigate replace={true} to={redirect} key={path} />;
+                }
 
-                    const Component = PageComponent && (
-                        typeof PageComponent === 'string'
-                            ? <React.Suspense fallback={<p>loading</p>}>
-                                {
-                                    React.lazy(
-                                        () => import(`../../pages/${PageComponent}.tsx`)
-                                    ) as TypedComponentType
-                                }
-                            </React.Suspense>
-                            : PageComponent
-                    );
+                const Component =
+                    PageComponent &&
+                    (typeof PageComponent === 'string' ? (
+                        <React.Suspense fallback={<p>loading</p>}>
+                            {
+                                React.lazy(
+                                    () =>
+                                        import(
+                                            `../../pages/${PageComponent}.tsx`
+                                        )
+                                ) as TypedComponentType
+                            }
+                        </React.Suspense>
+                    ) : (
+                        PageComponent
+                    ));
 
-                    const MyRender = ((props: ReactPropTypes) => (
-                        <div className="page-layout">
-                            <Header />
-                            <div className='content'><Component {...props} /></div>
-                            <Footer />
+                const MyRender = ((props: ReactPropTypes) => (
+                    <div className="page-layout">
+                        <Header />
+                        <div className="content">
+                            <Component {...props} />
                         </div>
-                    )) as any;
+                        <Footer />
+                    </div>
+                )) as any;
 
-                    return (
-                        <Route {...props} path={path} key={path} element={<MyRender />} />
-                    );
-
-                })
-            }
+                return (
+                    <Route
+                        {...props}
+                        path={path}
+                        key={path}
+                        element={<MyRender />}
+                    />
+                );
+            })}
         </Routes>
     );
 }
