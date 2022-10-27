@@ -21,7 +21,7 @@ function Overview(props: IProps) {
     const config = {
         data,
         xField: 'date',
-        yField: 'count',
+        yField: 'transaction',
         height: 116,
         xAxis: {
             tickCount: 5

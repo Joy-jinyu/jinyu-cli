@@ -1,16 +1,15 @@
 import React, { useEffect, useCallback, Dispatch } from 'react';
-import { Table, Row, Col, Button } from 'antd';
+import { Table, Row, Col } from 'antd';
 import { useParams, Link } from 'react-router-dom';
-import { DownloadOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
+import { DownloadCvs } from '@';
 import { isEmptyObj } from 'utils';
 import columns from './constants';
 import {
     asyncGetPageList,
     changTable,
     asyncGetContractDetail,
-    getInitState,
-    downTrans
+    getInitState
 } from '../../store/features/contractDetail';
 import './index.less';
 import { AnyAction } from '@reduxjs/toolkit';
@@ -32,9 +31,6 @@ function ContractDetail() {
         return () => {
             dispatch(getInitState());
         };
-    }, []);
-    const handleDown = useCallback(() => {
-        dispatch(downTrans());
     }, []);
     const pageChange = useCallback((page: number, pageSize: number) => {
         dispatch(changTable(page, pageSize, type));
@@ -74,10 +70,7 @@ function ContractDetail() {
             </div>
             <div className="table-title">
                 <h3 className="title">交易记录</h3>
-                <Button type="link" block onClick={handleDown}>
-                    导出为CSV
-                    <DownloadOutlined className="title-icon" />
-                </Button>
+                <DownloadCvs paramKey="address" paramValue={info.address} />
             </div>
             <Table
                 dataSource={list}

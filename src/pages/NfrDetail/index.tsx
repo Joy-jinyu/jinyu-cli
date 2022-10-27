@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, Dispatch } from 'react';
-import { Table, Row, Col, Button } from 'antd';
+import { Table, Row, Col } from 'antd';
 import { useParams, Link } from 'react-router-dom';
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadCvs } from '@';
 import { useSelector, useDispatch } from 'react-redux';
 import columns from './constants';
 import { isEmptyObj } from 'utils';
@@ -9,8 +9,7 @@ import {
     asyncGetPageList,
     changTable,
     getInitState,
-    asyncGetNfrDetail,
-    downTrans
+    asyncGetNfrDetail
 } from '../../store/features/nfrDetail';
 import './index.less';
 import { AnyAction } from '@reduxjs/toolkit';
@@ -34,9 +33,9 @@ function NfrDetail() {
             dispatch(getInitState());
         };
     }, []);
-    const handleDown = useCallback(() => {
-        dispatch(downTrans());
-    }, []);
+    // const handleDown = useCallback(() => {
+    //     dispatch(downTrans());
+    // }, []);
     const pageChange = useCallback((page: number, pageSize: number) => {
         dispatch(changTable(page, pageSize, type));
     }, []);
@@ -69,13 +68,15 @@ function NfrDetail() {
                 </Row>
                 <Row gutter={24}>
                     <Col className="label" span={2}>
-                        <span>持有者</span>
+                        <span>Nfr数量</span>
                     </Col>
-                    <Col>
-                        <Link to={`/walletDetail/${detail.ownerAddress}`}>
-                            {detail.ownerAddress}
-                        </Link>
+                    <Col>{detail.amount}</Col>
+                </Row>
+                <Row gutter={24}>
+                    <Col className="label" span={2}>
+                        <span>持有人数量</span>
                     </Col>
+                    <Col>{detail.ownerCount}</Col>
                 </Row>
 
                 <Row gutter={24}>
@@ -97,10 +98,7 @@ function NfrDetail() {
             </div>
             <div className="table-title">
                 <h3 className="title">交易记录</h3>
-                <Button type="link" block onClick={handleDown}>
-                    导出为CSV
-                    <DownloadOutlined className="title-icon" />
-                </Button>
+                <DownloadCvs paramKey="nfrIds" paramValue={detail.nfrId} />
             </div>
             <Table
                 dataSource={list}

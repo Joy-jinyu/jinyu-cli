@@ -95,26 +95,26 @@ export const asyncGetNfrDetail =
         dispatch(updateInfo(info?.data || {}));
     };
 
-export const downTrans =
-    () =>
-    (dispatch: Dispatch<AnyAction>, getState: () => { walletDetail: any }) => {
-        const { walletDetail } = getState();
-        const { pageInfo, info } = walletDetail;
-        const { pageStart, pageSize } = pageInfo;
-        request.post({
-            url: '/sys/file/downloadFileByPage',
-            query: {
-                file: {
-                    mapperId: 'transactionsService'
-                },
-                content: {
-                    address: info.address,
-                    pageStart,
-                    pageSize
-                }
-            },
-            isDownLoad: true
-        });
-    };
+// export const downTrans =
+//     () =>
+//     (dispatch: Dispatch<AnyAction>, getState: () => { walletDetail: any }) => {
+//         const { walletDetail } = getState();
+//         const { pageInfo, info } = walletDetail;
+//         const { pageStart, pageSize } = pageInfo;
+//         request.post({
+//             url: '/sys/file/downloadFileByPage',
+//             query: {
+//                 file: {
+//                     mapperId: 'transactionsService'
+//                 },
+//                 content: {
+//                     address: info.address,
+//                     pageStart,
+//                     pageSize
+//                 }
+//             },
+//             isDownLoad: true
+//         });
+//     };
 
 export default walletDetailSlice.reducer;

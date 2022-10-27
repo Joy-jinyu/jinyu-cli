@@ -1,16 +1,15 @@
 import React, { Dispatch, useEffect } from 'react';
-import { Table, Button } from 'antd';
-import { ClockCircleOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Table } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { formatSeconds, scendsTakenTo } from 'utils';
-import { CommonSearch } from '@';
+import { CommonSearch, DownloadCvs } from '@';
 import {
     asyncGetPageList,
     changTable,
     asyncGetDetail,
-    getInitState,
-    downTrans
+    getInitState
 } from '../../store/features/blockHeight';
 import { columns } from './constants';
 import { useCallback } from 'react';
@@ -34,9 +33,6 @@ function BlockHeight() {
             dispatch(getInitState());
         };
     }, [type]);
-    const handleDown = useCallback(() => {
-        dispatch(downTrans());
-    }, []);
     const pageChange = useCallback((page: number, pageSize: number) => {
         dispatch(changTable(page, pageSize, type));
     }, []);
@@ -57,10 +53,7 @@ function BlockHeight() {
             </div>
             <div className="table-title">
                 <h3 className="title">该高度下交易</h3>
-                <Button type="link" block onClick={handleDown}>
-                    导出为CSV
-                    <DownloadOutlined className="title-icon" />
-                </Button>
+                <DownloadCvs paramKey="blockHeight" paramValue={info.address} />
             </div>
 
             <Table

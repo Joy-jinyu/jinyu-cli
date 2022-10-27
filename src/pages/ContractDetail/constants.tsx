@@ -45,24 +45,6 @@ export const columns = [
         dataIndex: 'methodName'
     },
     {
-        title: 'NFR',
-        dataIndex: 'nfrList',
-        render(
-            nfrList: Array<{ id: number; name: string }> = [],
-            record: { toAddress: string }
-        ) {
-            if (nfrList.length === 1) {
-                const nfr = nfrList[0];
-                return (
-                    <Link to={`/nfrDetail/${nfr.id}/${record.toAddress}`}>
-                        {nfr.name}
-                    </Link>
-                );
-            }
-            return '--';
-        }
-    },
-    {
         title: 'NFRID',
         dataIndex: 'nfrList',
         render(

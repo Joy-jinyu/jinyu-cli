@@ -23,9 +23,9 @@ const axiosIns = axios.create({
 // "server": "yarn build && cross-env NODE_ENV=production ts-node server.ts",
 const API_HOST = {
     //测试环境
-    local: 'http://192.168.0.198:8080',
+    // local: 'http://192.168.0.198:8080',
     // 后端开发本地
-    // 'local': 'http://192.168.1.93:8080',
+    local: 'http://192.168.1.93:8080',
     uat: 'http://192.168.0.198:8080',
     prod: 'http://192.168.1.93:8080'
 };

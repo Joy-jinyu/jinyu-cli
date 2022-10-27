@@ -95,26 +95,26 @@ export const asyncGetDetail =
         dispatch(updateInfo(res?.data || {}));
     };
 
-export const downTrans =
-    () =>
-    (dispatch: Dispatch<AnyAction>, getState: () => { blockHeight: any }) => {
-        const { blockHeight } = getState();
-        const { pageInfo, info } = blockHeight;
-        const { pageStart, pageSize } = pageInfo;
-        request.post({
-            url: '/sys/file/downloadFileByPage',
-            query: {
-                file: {
-                    mapperId: 'transactionsService'
-                },
-                content: {
-                    blockHeight: info.address,
-                    pageStart,
-                    pageSize
-                }
-            },
-            isDownLoad: true
-        });
-    };
+// export const downTrans =
+//     () =>
+//     (dispatch: Dispatch<AnyAction>, getState: () => { blockHeight: any }) => {
+//         const { blockHeight } = getState();
+//         const { pageInfo, info } = blockHeight;
+//         const { pageStart, pageSize } = pageInfo;
+//         request.post({
+//             url: '/sys/file/downloadFileByPage',
+//             query: {
+//                 file: {
+//                     mapperId: 'transactionsService'
+//                 },
+//                 content: {
+//                     blockHeight: info.address,
+//                     pageStart,
+//                     pageSize
+//                 }
+//             },
+//             isDownLoad: true
+//         });
+//     };
 
 export default blockHeightSlice.reducer;

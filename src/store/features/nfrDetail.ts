@@ -102,26 +102,26 @@ export const asyncGetNfrDetail =
             });
     };
 
-export const downTrans =
-    () =>
-    (dispatch: Dispatch<AnyAction>, getState: () => { nfrDetail: any }) => {
-        const { nfrDetail } = getState();
-        const { pageInfo, detail } = nfrDetail;
-        const { pageStart, pageSize } = pageInfo;
-        request.post({
-            url: '/sys/file/downloadFileByPage',
-            query: {
-                file: {
-                    mapperId: 'transactionsService'
-                },
-                content: {
-                    nfrIds: detail.nfrId,
-                    pageStart,
-                    pageSize
-                }
-            },
-            isDownLoad: true
-        });
-    };
+// export const downTrans =
+//     () =>
+//     (dispatch: Dispatch<AnyAction>, getState: () => { nfrDetail: any }) => {
+//         const { nfrDetail } = getState();
+//         const { pageInfo, detail } = nfrDetail;
+//         const { pageStart, pageSize } = pageInfo;
+//         request.post({
+//             url: '/sys/file/downloadFileByPage',
+//             query: {
+//                 file: {
+//                     mapperId: 'transactionsService'
+//                 },
+//                 content: {
+//                     nfrIds: detail.nfrId,
+//                     pageStart,
+//                     pageSize
+//                 }
+//             },
+//             isDownLoad: true
+//         });
+//     };
 
 export default nfrDetailSlice.reducer;

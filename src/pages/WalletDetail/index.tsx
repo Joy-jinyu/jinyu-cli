@@ -1,16 +1,15 @@
 import React, { useEffect, useCallback, Dispatch } from 'react';
-import { Table, Button } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import { Table } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEmptyObj } from 'utils';
 import columns from './constants';
+import { DownloadCvs } from '@';
 import {
     asyncGetPageList,
     changTable,
     getInitState,
-    asyncGetNfrDetail,
-    downTrans
+    asyncGetNfrDetail
 } from '../../store/features/walletDetail';
 import './index.less';
 import { AnyAction } from '@reduxjs/toolkit';
@@ -34,9 +33,6 @@ function WalletDetail() {
             dispatch(getInitState());
         };
     }, []);
-    const handleDown = useCallback(() => {
-        dispatch(downTrans());
-    }, []);
     const { nfrCount } = info.searchData || {};
     const pageChange = useCallback((page: number, pageSize: number) => {
         dispatch(changTable(page, pageSize, type));
@@ -51,10 +47,7 @@ function WalletDetail() {
 
                 <div className="table-title">
                     <h3 className="title">交易记录</h3>
-                    <Button type="link" block onClick={handleDown}>
-                        导出为CSV
-                        <DownloadOutlined className="title-icon" />
-                    </Button>
+                    <DownloadCvs paramKey="address" paramValue={info.address} />
                 </div>
                 <Table
                     dataSource={list}
