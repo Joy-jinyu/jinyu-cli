@@ -84,7 +84,7 @@ function NfrDetail() {
                         <span>生成者</span>
                     </Col>
                     <Col>
-                        <Link to={`/contractDetail/${detail.creatorAddress}`}>
+                        <Link to={`/walletDetail/${detail.creatorAddress}`}>
                             {detail.creatorAddress}
                         </Link>
                     </Col>
