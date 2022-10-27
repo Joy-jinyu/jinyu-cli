@@ -83,12 +83,12 @@ export const asyncGetPageList =
     };
 // 获取nfr数据
 export const asyncGetNfrDetail =
-    (id = '', address = '') =>
+    (type = '', address = '') =>
     (dispatch: Dispatch<AnyAction>, getState: () => { main: any }) => {
         const { main } = getState();
-        const { type, address: contract } = main.routeParam;
-        const tokenId = id ? id : type;
-        const contractAddress = address ? address : contract;
+        const { type: nrfType, address: contractAdress } = main.routeParam;
+        const tokenId = type ? type : nrfType;
+        const contractAddress = address ? address : contractAdress;
         return request
             .post({
                 url: '/nfr/queryInfo',

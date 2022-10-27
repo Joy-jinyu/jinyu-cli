@@ -15,7 +15,7 @@ import './index.less';
 import { AnyAction } from '@reduxjs/toolkit';
 
 function NfrDetail() {
-    const { type = '' } = useParams();
+    const { type = '', address = '' } = useParams();
     const dispatch: Dispatch<AnyAction | any> = useDispatch();
     const {
         list = [],
@@ -26,7 +26,7 @@ function NfrDetail() {
     useEffect(() => {
         if (isEmptyObj(detail)) {
             dispatch(asyncGetPageList(type));
-            dispatch(asyncGetNfrDetail(type));
+            dispatch(asyncGetNfrDetail(type, address));
         }
 
         return () => {
