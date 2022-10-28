@@ -24,10 +24,8 @@ function WalletDetail() {
     } = useSelector((state: any) => state.walletDetail);
 
     useEffect(() => {
-        if (isEmptyObj(info)) {
-            dispatch(asyncGetPageList(type));
-            dispatch(asyncGetNfrDetail(type));
-        }
+        dispatch(asyncGetPageList(type));
+        dispatch(asyncGetNfrDetail(type));
 
         return () => {
             dispatch(getInitState());
