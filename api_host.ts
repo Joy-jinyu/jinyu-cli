@@ -1,5 +1,5 @@
 const APIHOST: any = {
-    local: 'http://192.168.1.56:8888/',
+    local: 'http://localhost:8888/',
     uat: 'http://192.168.0.198:8888'
 };
 

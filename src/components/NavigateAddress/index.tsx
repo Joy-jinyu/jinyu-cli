@@ -4,7 +4,7 @@ import useSearchNavigate from '~/hooks/useSearchNavigate';
 import { overLenTextShow } from 'utils';
 interface IProps {
     address: string;
-    isWrapText: boolean;
+    isWrapText?: boolean;
 }
 
 function NavigateAddress(props: IProps) {

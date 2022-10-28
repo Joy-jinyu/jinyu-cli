@@ -25,11 +25,7 @@ export const PAGE_CONFIG = {
                 title: '出块节点',
                 dataIndex: 'miner',
                 render: (text: string) => (
-                    <Popover content={text}>
-                        <Link to={`/walletDetail/${text}`}>
-                            {overLenTextShow(text)}
-                        </Link>
-                    </Popover>
+                    <Popover content={text}>{overLenTextShow(text)}</Popover>
                 )
             },
             {

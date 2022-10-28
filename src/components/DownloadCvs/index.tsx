@@ -1,4 +1,14 @@
-import { Button, Modal, Form, DatePicker, Input, Radio, Row, Col } from 'antd';
+import {
+    Button,
+    Modal,
+    Form,
+    DatePicker,
+    Input,
+    Radio,
+    Row,
+    Col,
+    message
+} from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import request from 'request';
 import moment from 'moment';
@@ -69,6 +79,10 @@ function DownloadCvs(props: IProps) {
                         }
                     },
                     isDownLoad: true
+                })
+                .then(() => {
+                    message.success('下载成功');
+                    setIsOpen(false);
                 })
                 .catch(() => {
                     requestCaptcha();
