@@ -32,7 +32,7 @@ function WalletDetail() {
         return () => {
             dispatch(getInitState());
         };
-    }, []);
+    }, [type]);
     const { nfrCount } = info.searchData || {};
     const pageChange = useCallback((page: number, pageSize: number) => {
         dispatch(changTable(page, pageSize, type));
