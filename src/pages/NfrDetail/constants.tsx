@@ -1,6 +1,7 @@
 import React from 'react';
 import { Popover } from 'antd';
 import { Link } from 'react-router-dom';
+import { NavigateAddress } from '@';
 import { overLenTextShow } from 'utils';
 export const columns = [
     {
@@ -32,9 +33,7 @@ export const columns = [
         dataIndex: 'toAddress',
         render: (toAddress: string) => (
             <Popover content={toAddress}>
-                <Link to={`/walletDetail/${toAddress}`}>
-                    {overLenTextShow(toAddress)}
-                </Link>
+                <NavigateAddress address={toAddress} />
             </Popover>
         )
     },
