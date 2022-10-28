@@ -129,8 +129,10 @@ function DownloadCvs(props: IProps) {
                                 name="time"
                                 label="时间"
                                 initialValue={[
-                                    moment().subtract(1, 'months'),
                                     moment()
+                                        .startOf('day')
+                                        .subtract(1, 'months'),
+                                    moment().startOf('day')
                                 ]}
                                 rules={[
                                     {
