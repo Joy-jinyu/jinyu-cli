@@ -75,7 +75,7 @@ export const asyncGetPageList =
         return request
             .post({
                 url: '/transactions/queryByPage',
-                query: { nfrIds, contractAddress, ...pageInfo }
+                query: { nfrIds, address: contractAddress, ...pageInfo }
             })
             .then((res: any) => {
                 return dispatch(updateList(res?.data));
