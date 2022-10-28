@@ -59,20 +59,23 @@ export const changTable =
         dispatch(updatePage({ pageStart: page, pageSize }));
         dispatch(asyncGetPageList(hash));
     };
-// 获取页面总览数据
+
 export const asyncGetPageList =
-    (id = '') =>
+    (id = '', address = '') =>
     (
         dispatch: Dispatch<AnyAction>,
         getState: () => { main: any; nfrDetail: any }
     ) => {
         const { main, nfrDetail } = getState();
         const { pageInfo } = nfrDetail;
-        const nfrIds = id ? id : main.routeParam.type;
+        const { address: contractAdress, type } = main.routeParam;
+        const nfrIds = id ? id : type;
+        const contractAddress = address ? address : contractAdress;
+
         return request
             .post({
                 url: '/transactions/queryByPage',
-                query: { nfrIds, ...pageInfo }
+                query: { nfrIds, contractAddress, ...pageInfo }
             })
             .then((res: any) => {
                 return dispatch(updateList(res?.data));

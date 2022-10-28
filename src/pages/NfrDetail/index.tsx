@@ -25,7 +25,7 @@ function NfrDetail() {
     console.log(detail, list);
     useEffect(() => {
         if (isEmptyObj(detail)) {
-            dispatch(asyncGetPageList(type));
+            dispatch(asyncGetPageList(type, address));
             dispatch(asyncGetNfrDetail(type, address));
         }
 
