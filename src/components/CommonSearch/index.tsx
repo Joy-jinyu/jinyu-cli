@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Input } from 'antd';
-import useSearchNavigate from '~/hooks/useSearchNavigate';
+import useSearchNavigate from '@/hooks/useSearchNavigate';
 import './index.less';
 const Search = Input.Search;
 

@@ -3,8 +3,8 @@ import { Table } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { formatSeconds, scendsTakenTo } from 'utils';
-import { CommonSearch, DownloadCvs } from '@';
+import { formatSeconds, scendsTakenTo } from '@utils';
+import { CommonSearch, DownloadCvs } from '@components';
 import {
     asyncGetPageList,
     changTable,

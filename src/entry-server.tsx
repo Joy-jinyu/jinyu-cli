@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { matchRoutes, RouteMatch } from 'react-router-dom';
-import { Layout } from '@';
+import { Layout } from '@components';
 import { Provider } from 'react-redux';
 import { updateRoute } from './store/features/main';
 import { getServerStore } from './store';
-import routeConfig from './routeConfig';
+import { routes } from './shared/const/route';
 import './index.less';
 import { AnyAction, Dispatch } from '@reduxjs/toolkit';
 interface ContextType {
@@ -42,7 +42,7 @@ async function getServerData(
 }
 
 export async function render(url: string, context: ContextType) {
-    const routeMatch = matchRoutes(routeConfig, url);
+    const routeMatch = matchRoutes(routes, url);
     const store = getServerStore();
     await getServerData(routeMatch, store.dispatch);
     updateContext(context, routeMatch, store);
@@ -50,7 +50,7 @@ export async function render(url: string, context: ContextType) {
     return ReactDOMServer.renderToString(
         <StaticRouter location={url}>
             <Provider store={store}>
-                <Layout routes={routeConfig} />
+                <Layout routes={routes} />
             </Provider>
         </StaticRouter>
     );

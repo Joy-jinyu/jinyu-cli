@@ -48,33 +48,33 @@ export const { updateList, getInitState, updatePage } = recentInfoSlice.actions;
 // 修改table
 export const changTable =
     (page: number, pageSize: number, pageType: string) =>
-    async (dispatch: Dispatch<AnyAction | any>) => {
-        dispatch(updatePage({ pageStart: page, pageSize }));
-        dispatch(asyncGetPageList(pageType));
-    };
+        async (dispatch: Dispatch<AnyAction | any>) => {
+            dispatch(updatePage({ pageStart: page, pageSize }));
+            dispatch(asyncGetPageList(pageType));
+        };
 // 获取页面总览数据
 export const asyncGetPageList =
     (pageType = '') =>
-    (
-        dispatch: Dispatch<AnyAction>,
-        getState: () => { main: any; recentInfo: any }
-    ) => {
-        const { main, recentInfo } = getState();
-        const { pageInfo } = recentInfo;
-        const { pageSize, pageStart } = pageInfo;
-        const type = pageType ? pageType : main.routeParam.type;
-        const url =
-            type === BLOCK_TYPE
-                ? '/block/queryByPage'
-                : '/transactions/queryByPage';
-        return request
-            .post({ url, query: { pageSize, pageStart } })
-            .then((res: any) => {
-                return dispatch(updateList(res?.data));
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
+        (
+            dispatch: Dispatch<AnyAction>,
+            getState: () => { main: any; recentInfo: any }
+        ) => {
+            const { main, recentInfo } = getState();
+            const { pageInfo } = recentInfo;
+            const { pageSize, pageStart } = pageInfo;
+            const type = pageType ? pageType : main.routeParam.type;
+            const url =
+                type === BLOCK_TYPE
+                    ? '/block/queryByPage'
+                    : '/transactions/queryByPage';
+            return request
+                .post({ url, query: { pageSize, pageStart } })
+                .then((res: any) => {
+                    return dispatch(updateList(res?.data));
+                })
+                .catch(e => {
+                    console.log(e, 'err 9');
+                });
+        };
 
 export default recentInfoSlice.reducer;

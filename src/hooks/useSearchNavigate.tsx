@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import request from 'request';
 
 function useSearchNavigate() {
     const navigate = useNavigate();
     const jumpToAddress = useCallback((address: string) => {
-        request.post({ url: '/dashboard/search', query: { address } })
+        request
+            .post('/dashboard/search', {}, { params: { address } })
             .then((res: any) => {
                 const { code, address } = res['data'] || {};
                 switch (code) {
@@ -22,11 +23,12 @@ function useSearchNavigate() {
                         navigate(`/blockHeight/${address}`);
                         break;
                     default:
-                        return ''
+                        return '';
                 }
-            }).catch(e => {
-                console.log(e);
             })
+            .catch(e => {
+                console.log(e, 'err 1');
+            });
     }, []);
 
     return jumpToAddress;

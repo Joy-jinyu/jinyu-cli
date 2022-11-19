@@ -24,20 +24,20 @@ export const { updateDetail, getInitState } = transactionSlice.actions;
 // 获取页面总览数据
 export const asyncGetDetail =
     (id = '') =>
-    (
-        dispatch: Dispatch<AnyAction | any>,
-        getState: () => { main: any; transaction: any }
-    ) => {
-        const { main } = getState();
-        const txnHash = id ? id : main.routeParam.type;
-        return request
-            .post({ url: '/transactions/queryInfo', query: { txnHash } })
-            .then((res: any) => {
-                return dispatch(updateDetail(res?.data || {}));
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
+        (
+            dispatch: Dispatch<AnyAction | any>,
+            getState: () => { main: any; transaction: any }
+        ) => {
+            const { main } = getState();
+            const txnHash = id ? id : main.routeParam.type;
+            return request
+                .post('/transactions/queryInfo', { txnHash })
+                .then((res: any) => {
+                    return dispatch(updateDetail(res?.data || {}));
+                })
+                .catch(e => {
+                    console.log(e, 'err 10');
+                });
+        };
 
 export default transactionSlice.reducer;

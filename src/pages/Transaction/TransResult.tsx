@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowDownOutlined, SwapRightOutlined } from '@ant-design/icons';
-import { NavigateAddress } from '@';
+import { NavigateAddress } from '@components';
 import { transactionEnum, MINT, MINT_BATCH, CREATE } from './ constants';
 import { Button, Popover } from 'antd';
 const MAX_SHOW = 5;

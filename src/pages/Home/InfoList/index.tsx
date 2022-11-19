@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { List, Popover } from 'antd';
 import { Link } from 'react-router-dom';
-import { NavigateAddress } from '@';
-import { overLenTextShow } from 'utils';
+import { NavigateAddress } from '@components';
+import { overLenTextShow } from '@utils';
 import './index.less';
 
 interface IProp {

@@ -8,7 +8,7 @@ import {
     getInitState
 } from '../../store/features/recentInfo';
 import { BLOCK_TYPE, PAGE_CONFIG } from './constants';
-import { CommonSearch } from '@';
+import { CommonSearch } from '@components';
 import { useCallback } from 'react';
 import './index.less';
 import { AnyAction } from '@reduxjs/toolkit';

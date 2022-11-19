@@ -1,12 +1,12 @@
-import Home from 'pages/Home';
-import BlockHeight from 'pages/BlockHeight';
-import NfrDetail from 'pages/NfrDetail';
-import ContractDetail from 'pages/ContractDetail';
-import WalletDetail from 'pages/WalletDetail';
-import Transaction from 'pages/Transaction';
-import RecentInfo from 'pages/RecentInfo';
+import Home from '@pages/Home';
+import BlockHeight from '@pages/BlockHeight';
+import NfrDetail from '@pages/NfrDetail';
+import ContractDetail from '@pages/ContractDetail';
+import WalletDetail from '@pages/WalletDetail';
+import Transaction from '@pages/Transaction';
+import RecentInfo from '@pages/RecentInfo';
 
-export default [
+export const routes = [
     { path: 'home', PageComponent: Home },
     { path: 'recentInfo/:type', PageComponent: RecentInfo },
     { path: 'blockHeight/:type', PageComponent: BlockHeight },

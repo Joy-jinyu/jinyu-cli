@@ -55,45 +55,44 @@ export const { updateList, getInitState, updatePage, updateInfo } =
 // 修改table
 export const changTable =
     (page: number, pageSize: number, hash: string) =>
-    async (dispatch: Dispatch<AnyAction | any>) => {
-        dispatch(updatePage({ pageStart: page, pageSize }));
-        dispatch(asyncGetPageList(hash));
-    };
+        async (dispatch: Dispatch<AnyAction | any>) => {
+            dispatch(updatePage({ pageStart: page, pageSize }));
+            dispatch(asyncGetPageList(hash));
+        };
 // 获取页面总览数据
 export const asyncGetPageList =
     (id = '') =>
-    (
-        dispatch: Dispatch<AnyAction>,
-        getState: () => { main: any; walletDetail: any }
-    ) => {
-        const { main, walletDetail } = getState();
-        const { pageInfo } = walletDetail;
-        const { pageStart, pageSize } = pageInfo;
-        const nfrIds = id ? id : main.routeParam.type;
-        return request
-            .post({
-                url: '/transactions/queryByPage',
-                query: { address: nfrIds, pageStart, pageSize }
-            })
-            .then((res: any) => {
-                return dispatch(updateList(res?.data));
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
+        (
+            dispatch: Dispatch<AnyAction>,
+            getState: () => { main: any; walletDetail: any }
+        ) => {
+            const { main, walletDetail } = getState();
+            const { pageInfo } = walletDetail;
+            const { pageStart, pageSize } = pageInfo;
+            const nfrIds = id ? id : main.routeParam.type;
+            return request
+                .post('/transactions/queryByPage',
+                    { address: nfrIds, pageStart, pageSize }
+                )
+                .then((res: any) => {
+                    return dispatch(updateList(res?.data));
+                })
+                .catch(e => {
+                    console.log(e, 'err 11');
+                });
+        };
 // 获取nfr数据
 export const asyncGetNfrDetail =
     (id = '') =>
-    async (dispatch: Dispatch<AnyAction>, getState: () => { main: any }) => {
-        const { main } = getState();
-        const walletId = id ? id : main.routeParam.type;
-        const info: any = await request.post({
-            url: '/dashboard/search',
-            query: { address: walletId }
-        });
-        dispatch(updateInfo(info?.data || {}));
-    };
+        async (dispatch: Dispatch<AnyAction>, getState: () => { main: any }) => {
+            const { main } = getState();
+            const walletId = id ? id : main.routeParam.type;
+            const info: any = await request.post(
+                '/dashboard/search',
+                { address: walletId }
+            );
+            dispatch(updateInfo(info?.data || {}));
+        };
 
 // export const downTrans =
 //     () =>

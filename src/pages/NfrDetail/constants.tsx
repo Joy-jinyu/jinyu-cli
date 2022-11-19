@@ -1,8 +1,8 @@
 import React from 'react';
 import { Popover } from 'antd';
 import { Link } from 'react-router-dom';
-import { NavigateAddress } from '@';
-import { overLenTextShow } from 'utils';
+import { NavigateAddress } from '@components';
+import { overLenTextShow } from '@utils';
 export const columns = [
     {
         title: '时间',

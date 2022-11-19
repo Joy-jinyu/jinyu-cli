@@ -1,4 +1,4 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import store from './features';
 
 // 获取服务端store数据

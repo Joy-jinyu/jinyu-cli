@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback, Dispatch } from 'react';
 import { Table, Row, Col } from 'antd';
 import { useParams, Link } from 'react-router-dom';
-import { DownloadCvs } from '@';
+import { DownloadCvs } from '@components';
 import { useSelector, useDispatch } from 'react-redux';
 import columns from './constants';
-import { isEmptyObj } from 'utils';
+import { isEmptyObj } from '@utils';
 import {
     asyncGetPageList,
     changTable,

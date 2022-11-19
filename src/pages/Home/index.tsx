@@ -3,8 +3,8 @@ import { Image, Button } from 'antd';
 import Overview from './Overview';
 import InfoList from './InfoList';
 import { useSelector, useDispatch } from 'react-redux';
-import { CommonSearch } from '@';
-import { isEmptyObj } from 'utils';
+import { CommonSearch } from '@components';
+import { isEmptyObj } from '@utils';
 import {
     asyncGetCountDetail,
     getInitState,

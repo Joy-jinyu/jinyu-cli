@@ -39,11 +39,9 @@ function DownloadCvs(props: IProps) {
 
     const requestCaptcha = useCallback(() => {
         request
-            .get({
-                url: '/sys/file/captchaImage'
-            })
-            .then((res: any) => {
-                const { uuid, img } = res?.data || {};
+            .get('/sys/file/captchaImage')
+            .then((data: any) => {
+                const { uuid, img } = data;
                 setImgStr(img);
                 setUuid(uuid);
             })
@@ -62,9 +60,9 @@ function DownloadCvs(props: IProps) {
             const { time, code } = res;
             const [startTime, endTime] = time;
             request
-                .post({
-                    url: '/sys/file/downloadFileByPage',
-                    query: {
+                .post(
+                    '/sys/file/downloadFileByPage',
+                    {
                         file: {
                             mapperId: 'transactionsService'
                         },
@@ -78,8 +76,12 @@ function DownloadCvs(props: IProps) {
                             uuid
                         }
                     },
-                    isDownLoad: true
-                })
+                    {
+                        headers: {
+                            isDownLoad: true
+                        }
+                    }
+                )
                 .then(() => {
                     message.success('下载成功');
                     setIsOpen(false);

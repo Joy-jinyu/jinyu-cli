@@ -1,5 +1,5 @@
 import { AnyAction, createSlice, Dispatch } from '@reduxjs/toolkit';
-import { scendsTakenTo } from 'utils';
+import { scendsTakenTo } from '@utils';
 import request from 'request';
 
 export const homeSlice = createSlice({
@@ -51,35 +51,35 @@ export const {
 // 获取页面总览数据
 export const asyncGetCountDetail = () => (dispatch: Dispatch<AnyAction>) => {
     return request
-        .get({ url: '/dashboard/countDetail' })
+        .get('/dashboard/countDetail')
         .then((res: any) => {
             return dispatch(getCountDetail(res?.data));
         })
         .catch(e => {
-            console.log(e);
+            console.log(e, 'err 4');
         });
 };
 // 获取最近出块
 export const asyncGetLastBlock = () => (dispatch: Dispatch<AnyAction>) => {
     return request
-        .get({ url: '/block/getLastBlock' })
+        .get('/block/getLastBlock')
         .then((res: any) => {
             return dispatch(getLastBlock(res?.data));
         })
         .catch(e => {
-            console.log(e);
+            console.log(e, 'err 5');
         });
 };
 // 获取最近交易
 export const asyncGetLastTransactions =
     () => (dispatch: Dispatch<AnyAction>) => {
         return request
-            .get({ url: '/transactions/getLastTransactions' })
+            .get('/transactions/getLastTransactions')
             .then((res: any) => {
                 return dispatch(getLastTransactions(res?.data));
             })
             .catch(e => {
-                console.log(e);
+                console.log(e, 'err 6');
             });
     };
 

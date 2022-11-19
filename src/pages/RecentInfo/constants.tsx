@@ -1,8 +1,8 @@
 import React from 'react';
-import { overLenTextShow } from 'utils';
+import { overLenTextShow } from '@utils';
 import { Link } from 'react-router-dom';
 import { Popover } from 'antd';
-import { NavigateAddress } from '@';
+import { NavigateAddress } from '@components';
 export const BLOCK_TYPE = 'recentBlock';
 export const TRANS_TYPE = 'recentTrans';
 

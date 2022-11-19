@@ -1,7 +1,7 @@
 /* @vite-ignore */
 import React, { ReactPropTypes } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Header, Footer } from '@';
+import { Header, Footer } from '@components';
 import { route, TypedComponentType } from './interface';
 import './index.less';
 
@@ -30,7 +30,7 @@ export default function Layout(props: { routes: Array<route> }) {
                                 React.lazy(
                                     () =>
                                         import(
-                                            `../../pages/${PageComponent}.tsx`
+                                            `@pages/${PageComponent}.tsx`
                                         )
                                 ) as TypedComponentType
                             }

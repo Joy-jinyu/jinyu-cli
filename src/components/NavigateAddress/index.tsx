@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button } from 'antd';
-import useSearchNavigate from '~/hooks/useSearchNavigate';
-import { overLenTextShow } from 'utils';
+import useSearchNavigate from '@/hooks/useSearchNavigate';
+import { overLenTextShow } from '@utils';
 interface IProps {
     address: string;
     isWrapText?: boolean;

@@ -55,55 +55,54 @@ export const { updateList, updatePage, getInitState, updateDetail } =
 // 修改table
 export const changTable =
     (page: number, pageSize: number, hash: string) =>
-    async (dispatch: Dispatch<AnyAction | any>) => {
-        dispatch(updatePage({ pageStart: page, pageSize }));
-        dispatch(asyncGetPageList(hash));
-    };
+        async (dispatch: Dispatch<AnyAction | any>) => {
+            dispatch(updatePage({ pageStart: page, pageSize }));
+            dispatch(asyncGetPageList(hash));
+        };
 
 export const asyncGetPageList =
     (id = '', address = '') =>
-    (
-        dispatch: Dispatch<AnyAction>,
-        getState: () => { main: any; nfrDetail: any }
-    ) => {
-        const { main, nfrDetail } = getState();
-        const { pageInfo } = nfrDetail;
-        const { address: contractAdress, type } = main.routeParam;
-        const nfrIds = id ? id : type;
-        const contractAddress = address ? address : contractAdress;
+        (
+            dispatch: Dispatch<AnyAction>,
+            getState: () => { main: any; nfrDetail: any }
+        ) => {
+            const { main, nfrDetail } = getState();
+            const { pageInfo } = nfrDetail;
+            const { address: contractAdress, type } = main.routeParam;
+            const nfrIds = id ? id : type;
+            const contractAddress = address ? address : contractAdress;
 
-        return request
-            .post({
-                url: '/transactions/queryByPage',
-                query: { nfrIds, address: contractAddress, ...pageInfo }
-            })
-            .then((res: any) => {
-                return dispatch(updateList(res?.data));
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
+            return request
+                .post('/transactions/queryByPage',
+                    { nfrIds, address: contractAddress, ...pageInfo }
+                )
+                .then((res: any) => {
+                    return dispatch(updateList(res?.data));
+                })
+                .catch(e => {
+                    console.log(e, 'err 7');
+                });
+        };
 // 获取nfr数据
 export const asyncGetNfrDetail =
     (type = '', address = '') =>
-    (dispatch: Dispatch<AnyAction>, getState: () => { main: any }) => {
-        const { main } = getState();
-        const { type: nrfType, address: contractAdress } = main.routeParam;
-        const tokenId = type ? type : nrfType;
-        const contractAddress = address ? address : contractAdress;
-        return request
-            .post({
-                url: '/nfr/queryInfo',
-                query: { tokenId, contractAddress }
-            })
-            .then((res: any) => {
-                return dispatch(updateDetail(res?.data || {}));
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
+        (dispatch: Dispatch<AnyAction>, getState: () => { main: any }) => {
+            const { main } = getState();
+            const { type: nrfType, address: contractAdress } = main.routeParam;
+            const tokenId = type ? type : nrfType;
+            const contractAddress = address ? address : contractAdress;
+            return request
+                .post(
+                    '/nfr/queryInfo',
+                    { tokenId, contractAddress }
+                )
+                .then((res: any) => {
+                    return dispatch(updateDetail(res?.data || {}));
+                })
+                .catch(e => {
+                    console.log(e, 'err 8');
+                });
+        };
 
 // export const downTrans =
 //     () =>

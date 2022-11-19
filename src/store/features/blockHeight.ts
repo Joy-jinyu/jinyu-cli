@@ -55,45 +55,45 @@ export const { updateList, updatePage, updateInfo, getInitState } =
 // 修改table
 export const changTable =
     (page: number, pageSize: number, hash: string) =>
-    async (dispatch: Dispatch<AnyAction | any>) => {
-        dispatch(updatePage({ pageStart: page, pageSize }));
-        dispatch(asyncGetPageList(hash));
-    };
+        async (dispatch: Dispatch<AnyAction | any>) => {
+            dispatch(updatePage({ pageStart: page, pageSize }));
+            dispatch(asyncGetPageList(hash));
+        };
 // 获取页面总览数据
 export const asyncGetPageList =
     (hash = '') =>
-    (
-        dispatch: Dispatch<AnyAction>,
-        getState: () => { main: any; blockHeight: any }
-    ) => {
-        const { main, blockHeight } = getState();
-        const { pageInfo } = blockHeight;
-        const height = hash ? hash : main.routeParam.type;
-        return request
-            .post({
-                url: '/transactions/queryByPage',
-                query: { blockHeight: height, ...pageInfo }
-            })
-            .then((res: any) => {
-                return dispatch(updateList(res?.data));
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    };
+        (
+            dispatch: Dispatch<AnyAction>,
+            getState: () => { main: any; blockHeight: any }
+        ) => {
+            const { main, blockHeight } = getState();
+            const { pageInfo } = blockHeight;
+            const height = hash ? hash : main.routeParam.type;
+            return request
+                .post(
+                    '/transactions/queryByPage', {
+                    blockHeight: height, ...pageInfo
+                })
+                .then((res: any) => {
+                    return dispatch(updateList(res?.data));
+                })
+                .catch(e => {
+                    console.log(e, 'err 2');
+                });
+        };
 
 // 获取block-height数据
 export const asyncGetDetail =
     (id = '') =>
-    async (dispatch: Dispatch<AnyAction>, getState: () => { main: any }) => {
-        const { main } = getState();
-        const address = id ? id : main.routeParam.type;
-        const res: any = await request.post({
-            url: '/dashboard/search',
-            query: { address }
-        });
-        dispatch(updateInfo(res?.data || {}));
-    };
+        async (dispatch: Dispatch<AnyAction>, getState: () => { main: any }) => {
+            const { main } = getState();
+            const address = id ? id : main.routeParam.type;
+            const res: any = await request.post(
+                '/dashboard/search', {
+                address
+            });
+            dispatch(updateInfo(res?.data || {}));
+        };
 
 // export const downTrans =
 //     () =>

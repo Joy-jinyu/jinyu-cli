@@ -9,16 +9,18 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'src/components/index.ts'),
+            '@': path.resolve(__dirname, 'src'),
+            '@pages': path.resolve(__dirname, 'src/pages'),
+            '@hooks': path.resolve(__dirname, 'src/hooks'),
+            '@shared': path.resolve(__dirname, 'src/shared'),
+            '@components': path.resolve(__dirname, 'src/components/index.ts'),
+            '@utils': path.resolve(__dirname, 'src/utils/index.ts'),
             request: path.resolve(__dirname, 'src/utils/request.ts'),
-            pages: path.resolve(__dirname, 'src/pages'),
-            utils: path.resolve(__dirname, 'src/utils/index.ts'),
-            '~': path.resolve(__dirname, 'src')
         }
     },
     css: {
         modules: {
-            generateScopedName: '[local]'
+            generateScopedName: '[dev]'
         },
         preprocessorOptions: {
             less: {
