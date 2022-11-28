@@ -1,16 +1,20 @@
-import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import { babel } from '@rollup/plugin-babel'
+import { terser } from 'rollup-plugin-terser'
 
+// const Global = `
+// global.navigator = { userAgent: 'node.js', };
+// `
+
+// https://blog.csdn.net/zz_jesse/article/details/124642247
 export default {
   input: './src/index.ts',
   output: [
     {
-      file: './bin/index.cjs.js',
+      file: './cjs/index.js',
       format: 'cjs'
-    },
-    {
-      file: './bin/index.esm.js',
-      format: 'esm'
+      // banner: Global
     }
   ],
   external: (id: string) => {
@@ -20,6 +24,8 @@ export default {
     resolve({
       extensions: ['.ts']
     }),
-    babel({ babelHelpers: 'bundled' })
+    commonjs(),
+    babel({ babelHelpers: 'bundled' }),
+    terser()
   ]
 }
