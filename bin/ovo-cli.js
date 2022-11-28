@@ -3,7 +3,7 @@ const importLocal = require('import-local')
 const chalk = require('chalk')
 
 if (importLocal(__dirname)) {
-  console.log(`Using local version of ${chalk.green('jinyu-cli')}`)
+  console.log(`Using local version of ${chalk.green('ovo-cli')}`)
 }
 
 module.exports = require('../index')

@@ -1,24 +1,26 @@
 {
-  "name": "jinyu-cli",
-  "version": "0.1.1",
+  "name": "@ovometajs/cli",
+  "version": "0.0.1",
   "description": "hello cli project",
   "bin": {
-    "jinyu": "bin/jinyu-cli.js"
+    "ovo": "bin/ovo-cli.js"
   },
   "main": "index.js",
   "scripts": {
     "build": "babel src --out-dir bin --extensions .ts",
-    "rollup": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "dev": "ts-node --esm src/index.ts hello -n jinyu",
-    "hello": "node index.js hello -n jinyu",
+    "rollup": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --sourcemap",
+    "dev": "ts-node --esm src/index.ts hello -n ovo",
+    "hello": "node index.js hello -n ovo",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "lint:fix": "npx eslint --ext .ts src/ --fix"
   },
   "keywords": [
     "commander",
-    "cli"
+    "cli",
+    "ovo",
+    "ovometa"
   ],
-  "author": "jinyuk@foxmail.com",
+  "author": "joy@ovometa.group",
   "license": "MIT",
   "dependencies": {
     "babel-jest": "^29.0.3",

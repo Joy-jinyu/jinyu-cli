@@ -1,9 +1,9 @@
 import { describe, expect } from '@jest/globals'
 import { execa } from 'execa'
 
-describe('test jinyu-cli hello', () => {
-  test('run hello -n joy out has joy', async () => {
+describe('test ovo-cli hello', () => {
+  test('run hello -n ovo out has ovo', async () => {
     const result = await execa('git', ['--version'])
-    expect(result.stdout).toBe('joy')
+    expect(result.stdout).toBe('ovo')
   })
 })
