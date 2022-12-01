@@ -1,0 +1,35 @@
+{
+  "name": "@ovometajs/cli",
+  "version": "0.0.1",
+  "description": "hello cli project",
+  "bin": {
+    "ovo": "bin/ovo-cli.js"
+  },
+  "main": "index.js",
+  "keywords": [
+    "commander",
+    "cli",
+    "ovo",
+    "ovometa"
+  ],
+  "author": "joy@ovometa.group",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.4.0",
+    "execa": "^6.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "cjs/",
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "package.json"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
