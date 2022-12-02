@@ -4,10 +4,12 @@ import { resolve as pathResolve } from 'path'
 import ts from 'rollup-plugin-typescript2'
 // import json from '@rollup/plugin-json'
 import commonjs from '@rollup/plugin-commonjs'
+import postcss from 'rollup-plugin-postcss'
 import { babel } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import { defineConfig, OutputOptions, Plugin, RollupOptions } from 'rollup'
 import { targets } from './scripts/utils'
+import { existsSync, rmSync } from 'fs'
 
 // const Global = `
 // global.navigator = { userAgent: 'node.js', };
@@ -19,24 +21,22 @@ const createConfig = ({
   input,
   output,
   pkg,
-  plugins = []
+  plugins = [],
+  target
 }: {
   input: string
   output: OutputOptions
   pkg: any
   plugins?: Plugin[]
+  target: string
 }): RollupOptions => {
   const tsPlugin = ts({
     check: process.env.NODE_ENV === 'production',
     tsconfig: pathResolve(__dirname, 'tsconfig.json'),
     cacheRoot: pathResolve(__dirname, 'node_modules/.rts2_cache'),
     tsconfigOverride: {
-      compilerOptions: {
-        sourceMap: output.sourcemap,
-        declaration: true,
-        declarationMap: true
-      },
-      exclude: ['**/__tests__', 'rollup.config.ts']
+      include: [`packages/${target}/src`],
+      exclude: ['rollup.config.ts', 'packages/*/__tests__']
     }
   })
 
@@ -56,10 +56,11 @@ const createConfig = ({
       //   namedExports: false
       // }),
       rollupResolve({
-        extensions: ['.ts']
+        extensions: ['.ts', '.tsx']
       }),
       tsPlugin,
       commonjs(),
+      ...plugins,
       terser({
         // module: false,
         compress: {
@@ -67,8 +68,7 @@ const createConfig = ({
           pure_getters: true
         },
         safari10: true
-      }),
-      ...plugins
+      })
     ],
     output,
     onwarn: (msg: any, warn) => {
@@ -88,9 +88,11 @@ const createConfig = ({
  */
 targets.forEach((target) => {
   const resolve = (...args: string[]) => pathResolve('packages', target, ...args)
+  if (existsSync(resolve('dist'))) rmSync(resolve('dist'), { recursive: true, force: true })
+
   const outputConfig: { cjs: OutputOptions } = {
     cjs: {
-      file: resolve('dist', `${target}.cjs.js`),
+      file: resolve('dist', `index.cjs.js`),
       format: 'cjs'
     }
   }
@@ -98,7 +100,11 @@ targets.forEach((target) => {
   const packageConfigs = createConfig({
     input: resolve('src', 'index.ts'),
     output: outputConfig.cjs,
-    pkg
+    pkg,
+    plugins: ['components'].includes(target)
+      ? [postcss(), babel({ babelHelpers: 'runtime', extensions: ['.tsx', '.ts'] })]
+      : [],
+    target
   })
   rollupOptions.push(packageConfigs)
 })

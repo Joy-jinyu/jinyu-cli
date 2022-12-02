@@ -1,6 +1,8 @@
 // jest 默认是支持直接使用 ts 来写 config
 // 安装依赖 yarn add -D jest ts-jest @types/jest
 import type { Config } from 'jest'
+import { defaults } from 'jest-config'
+const supportFile = ['ts', 'tsx', 'less']
 
 // https://kulshekhar.github.io/ts-jest/docs/next/guides/esm-support/
 const config: Config = {
@@ -22,7 +24,7 @@ const config: Config = {
     __COMPAT__: true
   },
   // 使jest支持esm
-  extensionsToTreatAsEsm: ['.ts'],
+  extensionsToTreatAsEsm: [...supportFile.map((extension) => `.${extension}`)],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1'
   },
@@ -36,7 +38,8 @@ const config: Config = {
     //     useESM: true
     //   }
     // ],
-    '^.+\\.[tj]sx?$': 'babel-jest' // added this line
+    '^.+\\.[tj]sx?$': 'babel-jest', // added this line
+    '\\.(less|css)$': 'jest-less-loader' // 支持less
   },
   coverageDirectory: 'coverage',
   coverageReporters: ['html', 'lcov', 'text'],
@@ -52,7 +55,7 @@ const config: Config = {
     // '!packages/vue-compat/**'
   ],
   watchPathIgnorePatterns: ['/node_modules/', '/dist/', '/.git/'],
-  moduleFileExtensions: ['js', 'ts', 'tsx'],
+  moduleFileExtensions: [...defaults.moduleFileExtensions, 'mjs', 'js'],
   // moduleNameMapper: {
   //   // '@vue/compat': '<rootDir>/packages/vue-compat/src',
   //   // '^@vue/(.*?)$': '<rootDir>/packages/$1/src'

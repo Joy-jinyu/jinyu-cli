@@ -1,11 +1,12 @@
 {
   "name": "@ovometajs/cli",
-  "version": "0.0.1",
-  "description": "hello cli project",
+  "version": "0.0.2",
+  "description": "ovometa cli",
   "bin": {
     "ovo": "bin/ovo-cli.js"
   },
-  "main": "index.js",
+  "main": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
   "keywords": [
     "commander",
     "cli",
@@ -23,9 +24,7 @@
     "access": "public"
   },
   "files": [
-    "cjs/",
-    "index.js",
-    "index.d.ts",
+    "dist/",
     "README.md",
     "package.json"
   ],
