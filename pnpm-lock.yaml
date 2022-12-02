@@ -93,16 +93,12 @@ importers:
   packages/components:
     specifiers:
       '@ant-design/icons': ^4.8.0
-      '@dimjs/lang': ^1.2.23
-      '@dimjs/model': ^1.1.8
-      '@dimjs/model-react': ^1.1.8
-      '@dimjs/utils': ^1.2.23
+      '@ovometajs/hooks': ^0.0.4
       '@testing-library/react': ^13.4.0
       '@testing-library/react-hooks': ^8.0.1
       '@types/mockjs': ^1.0.7
       '@types/react': ^18.0.25
       '@types/react-beautiful-dnd': ^13.1.2
-      '@wove/react': ^1.2.22
       antd: ^5.0.3
       less: ^4.1.3
       less-loader: ^11.1.0
@@ -112,11 +108,7 @@ importers:
       react-dom: ^18.2.0
     dependencies:
       '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
-      '@dimjs/lang': 1.2.23
-      '@dimjs/model': 1.1.8
-      '@dimjs/model-react': 1.1.8_biqbaboplfbrettd7655fr4n2y
-      '@dimjs/utils': 1.2.23
-      '@wove/react': 1.2.22_asvnqearrq7eukmkpxlzlbxh7m
+      '@ovometajs/hooks': link:../hooks
       antd: 5.0.3_biqbaboplfbrettd7655fr4n2y
       less: 4.1.3
       less-loader: 11.1.0_less@4.1.3
@@ -130,6 +122,19 @@ importers:
       '@types/mockjs': 1.0.7
       '@types/react': 18.0.25
       '@types/react-beautiful-dnd': 13.1.2
+
+  packages/hooks:
+    specifiers:
+      '@testing-library/react': ^13.4.0
+      '@testing-library/react-hooks': ^8.0.1
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    devDependencies:
+      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
+      '@testing-library/react-hooks': 8.0.1_biqbaboplfbrettd7655fr4n2y
 
 packages:
 
@@ -1520,40 +1525,6 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /@dimjs/lang/1.2.23:
-    resolution: {integrity: sha512-AImPLB3gHsS9Nrm2ZVuNLErTbxp74Q574Rn/cTcIK/k+NjEXJz7bke7pm6QZ2cyTletWAvvfrgjr99vyPUM+pA==}
-    engines: {node: '>=13.8.0'}
-    dev: false
-
-  /@dimjs/model-react/1.1.8_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-7NsOLxlfn7/9MN/VEQ5b0lR/wJIfdvza8FcHxxWmj5POHl25Vp59Rg5zHWlRep+n1xQjVOdLE9nyXg3AfQ4tkA==}
-    engines: {node: '>=13.8.0'}
-    peerDependencies:
-      react: ^17.0.2 || ^18.2.0
-      react-dom: ^17.0.2 || ^18.2.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      '@dimjs/model': 1.1.8
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@dimjs/model/1.1.8:
-    resolution: {integrity: sha512-eC4uKIpW5Z3638S6XnTZtVYmAPQNo4nBQ0Pa2c1dN74/rxt7r2D7sqr28TzxHXUlFr4pQfSQFk5uPcuDruhlYA==}
-    engines: {node: '>=13.8.0'}
-    dev: false
-
-  /@dimjs/utils/1.2.23:
-    resolution: {integrity: sha512-rYOKrqf8kJF5dqdUEpFcVn1CVd8EN9L7wJ2rBd6dHTQ50AIV02xgM7X1axtpKHwV2G8ESVdfbEgEmWMFuhKXYA==}
-    engines: {node: '>=13.8.0'}
-    dependencies:
-      '@dimjs/lang': 1.2.23
-    dev: false
-
   /@emotion/hash/0.8.0:
     resolution: {integrity: sha512-kBJtf7PH6aWwZ6fka3zQ0p6SBYzx4fl1LoZXE2RrnYST9Xljm7WfKJrU4g/Xr3Beg72MLrp1AWNUmuYJTL7Cow==}
     dev: false
@@ -2106,6 +2077,28 @@ packages:
       react-error-boundary: 3.1.4_react@18.2.0
     dev: true
 
+  /@testing-library/react-hooks/8.0.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-Aqhl2IVmLt8IovEVarNDFuJDVWVvhnr9/GCU6UUnrYXwgDFF9h2L2o2P9KBni1AST5sT6riAyoukFLyjQUgD/g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@types/react': ^16.9.0 || ^17.0.0
+      react: ^16.9.0 || ^17.0.0
+      react-dom: ^16.9.0 || ^17.0.0
+      react-test-renderer: ^16.9.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react-dom:
+        optional: true
+      react-test-renderer:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.20.6
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-error-boundary: 3.1.4_react@18.2.0
+    dev: true
+
   /@testing-library/react/13.4.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-sXOGON+WNTh3MLE9rve97ftaZukN3oNf2KjDy7YTx6hcTO2uuLHuCGynMDhFwGw/jYf4OJ2Qk0i4i79qMNNkyw==}
     engines: {node: '>=12'}
@@ -2444,32 +2437,6 @@ packages:
       '@typescript-eslint/types': 5.45.0
       eslint-visitor-keys: 3.3.0
     dev: true
-
-  /@wove/react/1.2.22_asvnqearrq7eukmkpxlzlbxh7m:
-    resolution: {integrity: sha512-OJhULzmKloGLepBUqlXfdDoKh/6i4gIOp3PhF6X388lddlHIT2tWf7fhpJ/67o+MBppNs+6Hg8tdmEVtlG18ww==}
-    engines: {node: '>=13.8.0'}
-    peerDependencies:
-      '@better-scroll/core': ^2.4.2
-      '@dimjs/lang': ^1.2.19
-      '@dimjs/model': ^1.1.7
-      '@dimjs/model-react': ^1.1.7
-      '@dimjs/utils': ^1.2.19
-      cropperjs: ^1.5.12
-      react: '*'
-    peerDependenciesMeta:
-      '@better-scroll/core':
-        optional: true
-      cropperjs:
-        optional: true
-      react:
-        optional: true
-    dependencies:
-      '@dimjs/lang': 1.2.23
-      '@dimjs/model': 1.1.8
-      '@dimjs/model-react': 1.1.8_biqbaboplfbrettd7655fr4n2y
-      '@dimjs/utils': 1.2.23
-      react: 18.2.0
-    dev: false
 
   /abab/2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}

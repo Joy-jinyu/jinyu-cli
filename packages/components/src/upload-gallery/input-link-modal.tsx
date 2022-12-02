@@ -29,7 +29,13 @@ export const InputLinkModal = ({ visible, onClose, onSave }: IInputLinkModal) =>
   }
 
   return (
-    <Modal open={visible} title="图片地址" onOk={handleOk} onCancel={handleCancel}>
+    <Modal
+      open={visible}
+      visible={visible}
+      title="图片地址"
+      onOk={handleOk}
+      onCancel={handleCancel}
+    >
       <Form form={form} name="name">
         <Form.Item
           label="图片链接"

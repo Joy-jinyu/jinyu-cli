@@ -3,7 +3,7 @@ import chalk from 'chalk'
 const program = new Command()
 const log = console.log
 
-program.name('ovo-cli').description('ovo cli tools').version('0.0.1')
+program.name('ovo-cli').description('ovo cli tools').version('0.0.4')
 
 program
   .command('hello')

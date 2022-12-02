@@ -1,9 +1,9 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { hooks } from '@wove/react'
 import { Modal, Upload } from 'antd'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile } from 'antd/es/upload/interface'
 import mockjs from 'mockjs'
+import { useCallbackRef } from '@ovometajs/hooks'
 import React, { useState, useEffect } from 'react'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { InputLinkModal } from './input-link-modal'
@@ -111,7 +111,7 @@ export const UploadGallery = ({ action, value, onChange, multiple, max = 1 }: IU
     </div>
   )
 
-  const moveRow = hooks.useCallbackRef((result: DropResult) => {
+  const moveRow = useCallbackRef((result: DropResult) => {
     const { source, destination } = result || {}
     if (!destination || !source) {
       return
@@ -176,7 +176,13 @@ export const UploadGallery = ({ action, value, onChange, multiple, max = 1 }: IU
           )}
         </Droppable>
       </DragDropContext>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+      <Modal
+        open={previewOpen}
+        visible={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}
+      >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
       <InputLinkModal

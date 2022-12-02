@@ -4,8 +4,7 @@ import { UploadGallery } from '../src'
 
 describe('child render', () => {
   test('render', () => {
-    // data-testid=""
-    const { getByTestId } = render(<UploadGallery action="ss" />)
-    expect(getByTestId('count').innerHTML).toBe('1')
+    const { container } = render(<UploadGallery action="ss" />)
+    expect(container.innerHTML).toBe('1')
   })
 })

@@ -54,6 +54,7 @@ const config: Config = {
     // // mostly just entries
     // '!packages/vue-compat/**'
   ],
+  errorOnDeprecated: false,
   watchPathIgnorePatterns: ['/node_modules/', '/dist/', '/.git/'],
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'mjs', 'js'],
   // moduleNameMapper: {
