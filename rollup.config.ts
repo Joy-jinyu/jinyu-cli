@@ -33,7 +33,7 @@ targets.forEach((target) => {
   const pkg = require(resolve('package.json'))
   const packageConfigs = createConfig({
     input: resolve('src', 'index.ts'),
-    output: distHasEsm ? [outputConfig.cjs, outputConfig.esm] : [outputConfig.cjs],
+    output: distHasEsm.includes(target) ? [outputConfig.cjs, outputConfig.esm] : [outputConfig.cjs],
     pkg,
     plugins: babelSupportModules.includes(target)
       ? [postcss(), babel({ babelHelpers: 'runtime', extensions: ['.tsx', '.ts'] })]

@@ -8,7 +8,7 @@ import { terser } from 'rollup-plugin-terser'
 // import json from '@rollup/plugin-json'
 import ts from 'rollup-plugin-typescript2'
 
-export const distHasEsm = ['components', 'hooks']
+export const distHasEsm = ['components']
 export const babelSupportModules = ['components', 'hooks']
 
 export const targets = readdirSync('packages').filter(
