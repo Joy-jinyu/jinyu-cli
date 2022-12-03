@@ -11,6 +11,15 @@ import ts from 'rollup-plugin-typescript2'
 export const distHasEsm = ['components']
 export const babelSupportModules = ['components', 'hooks']
 
+const babelExternal = [
+  '@babel/runtime/regenerator',
+  '@babel/runtime/helpers/asyncToGenerator',
+  '@babel/runtime/helpers/slicedToArray',
+  '@babel/runtime/helpers/extends',
+  '@babel/runtime/helpers/toConsumableArray',
+  '@babel/runtime/helpers/defineProperty'
+]
+
 export const targets = readdirSync('packages').filter(
   (f) =>
     // 当前是一个目录
@@ -45,7 +54,8 @@ export const createConfig = ({
   let external = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
-    ...['path', 'url', 'stream'] // for @vue/compiler-sfc / server-renderer
+    ...['path', 'url', 'stream'],
+    ...babelExternal
   ]
 
   return {

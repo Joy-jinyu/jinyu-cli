@@ -8,6 +8,7 @@ const supportFile = ['ts', 'tsx', 'less']
 const config: Config = {
   testEnvironment: 'jsdom',
   preset: 'ts-jest',
+  setupFilesAfterEnv: ['./scripts/setupJestEnv.ts'],
   globals: {
     __DEV__: true,
     __TEST__: true,
@@ -30,21 +31,14 @@ const config: Config = {
   },
   // 需要研究一下
   transform: {
-    // '^.+\\.[tj]sx?$': [
-    //   'ts-jest',
-    //   {
-    //     target: 'esnext',
-    //     sourceMap: true,
-    //     useESM: true
-    //   }
-    // ],
     '^.+\\.[tj]sx?$': 'babel-jest', // added this line
     '\\.(less|css)$': 'jest-less-loader' // 支持less
   },
   coverageDirectory: 'coverage',
   coverageReporters: ['html', 'lcov', 'text'],
   collectCoverageFrom: [
-    'packages/*/src/**/*.ts'
+    'packages/*/src/**/*.ts',
+    'packages/*/src/**/*.tsx'
     // // DOM transitions are tested via e2e so no coverage is collected
     // '!packages/runtime-dom/src/components/Transition*',
     // // only called in browsers
@@ -54,13 +48,8 @@ const config: Config = {
     // // mostly just entries
     // '!packages/vue-compat/**'
   ],
-  errorOnDeprecated: false,
   watchPathIgnorePatterns: ['/node_modules/', '/dist/', '/.git/'],
-  moduleFileExtensions: [...defaults.moduleFileExtensions, 'mjs', 'js'],
-  // moduleNameMapper: {
-  //   // '@vue/compat': '<rootDir>/packages/vue-compat/src',
-  //   // '^@vue/(.*?)$': '<rootDir>/packages/$1/src'
-  // },
+  moduleFileExtensions: [...defaults.moduleFileExtensions, 'js'],
   rootDir: __dirname,
   testMatch: ['<rootDir>/packages/**/__tests__/**/*spec.[jt]s?(x)']
 }

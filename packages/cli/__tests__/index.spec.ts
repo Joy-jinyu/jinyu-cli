@@ -1,3 +1,4 @@
+import { describe, expect, test } from '@jest/globals'
 import { execa } from 'execa'
 
 describe('test ovo-cli hello', () => {

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { resolve as pathResolve } from 'path'
 
 import postcss from 'rollup-plugin-postcss'
@@ -16,7 +17,7 @@ const rollupOptions: RollupOptions[] = []
  * * [书写配置文件可以使用ts写法](https://rollupjs.org/guide/en/#--configplugin-plugin)
  * * [rollup常用的插件]（https://blog.csdn.net/zz_jesse/article/details/124642247）
  */
-targets.forEach((target) => {
+targets.reverse().forEach((target) => {
   const resolve = (...args: string[]) => pathResolve('packages', target, ...args)
   if (existsSync(resolve('dist'))) rmSync(resolve('dist'), { recursive: true, force: true })
 
@@ -36,7 +37,15 @@ targets.forEach((target) => {
     output: distHasEsm.includes(target) ? [outputConfig.cjs, outputConfig.esm] : [outputConfig.cjs],
     pkg,
     plugins: babelSupportModules.includes(target)
-      ? [postcss(), babel({ babelHelpers: 'runtime', extensions: ['.tsx', '.ts'] })]
+      ? [
+        postcss(),
+        babel({
+          babelHelpers: 'runtime',
+          // include: [resolve('src')],
+          plugins: ['@babel/plugin-transform-runtime'],
+          extensions: ['.tsx', '.ts']
+        })
+      ]
       : [],
     target
   })
