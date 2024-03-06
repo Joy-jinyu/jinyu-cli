@@ -1,0 +1,2 @@
+"use strict";var o=require("commander");function e(o){return o&&"object"==typeof o&&"default"in o?o:{default:o}}var a=e(require("chalk"));const n=new o.Command,r=console.log;n.name("ovo-cli").description("ovo cli tools").version("0.0.4"),n.command("hello").description("hello commander").argument("<string>","console name").option("-n, --name","show you name").option("-s, --separator <char>","separator character",",").action((async(o,e)=>{e.name&&r(`hello ${a.default.bold.red(o)}, it's happy to meet you!`)})),n.parse(process.argv);
+//# sourceMappingURL=cli.cjs.js.map

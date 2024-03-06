@@ -27,6 +27,7 @@ const config: Config = {
   // 使jest支持esm
   extensionsToTreatAsEsm: [...supportFile.map((extension) => `.${extension}`)],
   moduleNameMapper: {
+    '^@ovometajs/hooks$': '<rootDir>/packages/hooks/src/index.ts',
     '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   // 需要研究一下

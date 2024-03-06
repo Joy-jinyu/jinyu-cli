@@ -2,8 +2,9 @@
   "name": "@ovometajs/hooks",
   "version": "0.0.7",
   "description": "ovometa hooks project",
-  "main": "dist/index.cjs.js",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.cjs.js",
+  "module": "es/index.esm.js",
+  "types": "es/index.d.ts",
   "keywords": [
     "hooks",
     "ovo",
@@ -16,12 +17,13 @@
     "react-dom": "^18.2.0"
   },
   "dependencies": {
-    "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",
-    "@testing-library/react-hooks": "^8.0.1"
+    "@testing-library/react-hooks": "^8.0.1",
+    "@types/react": "^18.0.25",
+    "react": "^18.2.0"
   },
   "publishConfig": {
     "access": "public"

@@ -8,7 +8,7 @@ import { terser } from 'rollup-plugin-terser'
 // import json from '@rollup/plugin-json'
 import ts from 'rollup-plugin-typescript2'
 
-export const distHasEsm = ['components']
+export const distHasEsm = ['components', 'hooks']
 export const babelSupportModules = ['components', 'hooks']
 
 const babelExternal = [
@@ -76,7 +76,7 @@ export const createConfig = ({
       terser({
         // module: false,
         compress: {
-          ecma: 2015,
+          ecma: 2020,
           pure_getters: true
         },
         safari10: true

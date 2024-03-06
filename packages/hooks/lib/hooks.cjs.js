@@ -1,0 +1,2 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("react");exports.useCallbackRef=function(r){var t=e.useRef(r);return e.useLayoutEffect((function(){t.current=r})),e.useCallback((function(){for(var e,r=arguments.length,u=new Array(r),n=0;n<r;n++)u[n]=arguments[n];return null===(e=t.current)||void 0===e?void 0:e.call.apply(e,[t].concat(u))}),[])};
+//# sourceMappingURL=hooks.cjs.js.map
