@@ -1,8 +1,9 @@
 {
   "name": "@ovometajs/components",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "ovometa components project",
-  "main": "dist/index.cjs.js",
+  "main": "lib/components.cjs.js",
+  "module": "es/components.esm.js",
   "types": "dist/index.d.ts",
   "keywords": [
     "components",
@@ -12,7 +13,7 @@
   "author": "joy@ovometa.group",
   "license": "MIT",
   "dependencies": {
-    "@ovometajs/hooks": "0.1.0",
+    "@ovometajs/hooks": "^0.1.1",
     "@ant-design/icons": "^4.8.0",
     "antd": "^5.0.3",
     "less": "^4.1.3",
