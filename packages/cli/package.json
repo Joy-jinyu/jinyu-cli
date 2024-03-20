@@ -1,11 +1,11 @@
 {
   "name": "@ovometajs/cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "ovometa cli",
   "bin": {
     "ovo": "bin/ovo-cli.js"
   },
-  "main": "dist/index.cjs.js",
+  "main": "lib/cli.cjs.js",
   "types": "dist/index.d.ts",
   "keywords": [
     "commander",

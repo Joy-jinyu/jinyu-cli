@@ -1,9 +1,9 @@
 {
   "name": "@ovometajs/hooks",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ovometa hooks project",
-  "main": "lib/index.cjs.js",
-  "module": "es/index.esm.js",
+  "main": "lib/hooks.cjs.js",
+  "module": "es/hooks.esm.js",
   "types": "es/index.d.ts",
   "keywords": [
     "hooks",
