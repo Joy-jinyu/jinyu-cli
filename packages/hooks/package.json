@@ -1,6 +1,6 @@
 {
   "name": "@ovometajs/hooks",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "ovometa hooks project",
   "main": "lib/index.cjs.js",
   "module": "es/index.esm.js",
@@ -29,7 +29,8 @@
     "access": "public"
   },
   "files": [
-    "dist/",
+    "es/",
+    "lib/",
     "README.md",
     "package.json"
   ],

@@ -20,13 +20,16 @@ const babelExternal = [
   '@babel/runtime/helpers/defineProperty'
 ]
 
-export const targets = readdirSync('packages').filter(
-  (f) =>
-    // 当前是一个目录
-    statSync(pathResolve('packages', f)).isDirectory() &&
-    // 目录下存在package.json文件
-    existsSync(pathResolve('packages', f, 'package.json'))
-)
+export const getTargets = (envTargets: string[]) => {
+  return readdirSync('packages').filter(
+    (f) =>
+      envTargets.includes(f) &&
+      // 当前是一个目录
+      statSync(pathResolve('packages', f)).isDirectory() &&
+      // 目录下存在package.json文件
+      existsSync(pathResolve('packages', f, 'package.json'))
+  )
+}
 
 export const createConfig = ({
   input,

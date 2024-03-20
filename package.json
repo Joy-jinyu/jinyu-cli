@@ -3,8 +3,8 @@
   "scripts": {
     "clean:modules": "rimraf node_modules **/node_modules **/**/node_modules",
     "lint:fix": "npx eslint --ext .ts src/ --fix",
-    "rollup": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --sourcemap",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "rollup": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --sourcemap --environment TARGETS:hooks",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --verbose"
   },
   "author": "joy@ovometa.group",
   "license": "MIT",

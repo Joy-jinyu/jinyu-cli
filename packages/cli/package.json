@@ -24,7 +24,8 @@
     "access": "public"
   },
   "files": [
-    "dist/",
+    "es/",
+    "lib/",
     "README.md",
     "package.json"
   ],
