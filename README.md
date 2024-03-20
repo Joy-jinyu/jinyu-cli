@@ -35,3 +35,6 @@ rollup-plugin-typescript2 是 Rollup 的 TypeScript 插件，用于处理 TypeSc
 + 同时支持不报waring
 "NODE_OPTIONS='--experimental-vm-modules --no-warnings'
 
+## pnpm
+pnpm --filter <package_selector> <command>
++ @ovometajs/cli
