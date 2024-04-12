@@ -8,9 +8,6 @@ import { terser } from 'rollup-plugin-terser'
 // import json from '@rollup/plugin-json'
 import ts from 'rollup-plugin-typescript2'
 
-export const distHasEsm = ['components', 'hooks']
-export const babelSupportModules = ['components', 'hooks']
-
 const babelExternal = [
   '@babel/runtime/regenerator',
   '@babel/runtime/helpers/asyncToGenerator',

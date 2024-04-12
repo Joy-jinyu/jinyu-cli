@@ -1,87 +1,84 @@
-// import { cloneNode } from "./cloneClone";
-// import { domToSvg } from "./utils/svg";
-// import { embedFonts } from "./utils/font";
-// import { inlineImages } from "./utils/image";
-// import { delay, makeImage} from "./utils";
+import { cloneNode } from "./cloneNode";
+import { domToSvg } from "./utils/svg";
+import { embedFonts } from "./utils/font";
+import { inlineImages } from "./utils/image";
+import { delay, makeImage, nodeHeight, nodeWidth} from "./utils";
 
-// export class DomToImage {
-//   private options: any
-//   constructor(options: any) {
-//     this.options = options || {}
-//   }
+export class DomToImage {
+  private options: any
+  constructor(options: any = {}) {
+    this.options = options || {}
+  }
 
-//   public async toPng(node: HTMLElement) {
-//     return await this.draw(node)
-//         .then(function (canvas) {
-//             return canvas.toDataURL();
-//         });
-//   }
+  public async toPng(node: HTMLElement, options: any = {}) {
+    this.options = {...this.options, ...options }
 
-//   private draw(domNode: HTMLElement) {
-//     return this.toSvg(domNode)
-//       .then(makeImage)
-//       .then(delay(100))
-//       .then((image: any) => {
-//         let canvas = this.newCanvas(domNode);
-//         canvas.getContext('2d')?.drawImage(image, 0, 0);
-//         return canvas;
-//       });
-//   }
+    return await this.draw(node)
+        .then(function (canvas) {
+            return canvas.toDataURL();
+        });
+  }
 
-//   public async toSvg(node: HTMLElement) {
-//     const { filter, bgcolor, width, height, style } = this.options
+  private draw(domNode: HTMLElement, options: any = {}) {
+    this.options = {...this.options, ...options }
+    return this.toSvg(domNode)
+      .then(makeImage)
+      .then(delay(100))
+      .then((image: any) => {
+        let canvas = this.newCanvas(domNode);
+        canvas.getContext('2d')?.drawImage(image, 0, 0);
+        return canvas;
+      });
+  }
 
-//     const applyOptions = (clone: HTMLElement | undefined) => {
-//       if (!clone) return
-//       if (bgcolor) clone.style.backgroundColor = bgcolor;
-//       if (width) clone.style.width = width + 'px';
-//       if (height) clone.style.height = height + 'px';
+  public async toSvg(node: HTMLElement,options: any = {}) {
+    this.options = {...this.options, ...options }
 
-//       if (style)
-//           Object.keys(style).forEach((property: any) => {
-//               clone.style[property] = style[property];
-//           });
+    const { filter, loadFont, bgcolor, width, height, style } = this.options
 
-//       return clone;
-//     }
-//     return await Promise.resolve(node)
-//         .then((node: HTMLElement) => {
-//             return cloneNode(node, filter, true);
-//         })
-//         .then(embedFonts)
-//         .then(inlineImages)
-//         .then(applyOptions)
-//         .then((clone) => {
-//           if (!clone) return
-//             return domToSvg(clone,
-//                 width || width(node),
-//                 height || height(node)
-//             )
-//         })
-//   }
+    const applyOptions = (clone: HTMLElement | undefined) => {
+      if (!clone) return
+      if (bgcolor) clone.style.backgroundColor = bgcolor;
+      if (width) clone.style.width = width + 'px';
+      if (height) clone.style.height = height + 'px';
 
-//   private newCanvas(domNode: HTMLElement): HTMLCanvasElement {
-//     const { width, height, bgcolor } = this.options
-//     let canvas = document.createElement('canvas');
-//     canvas.width = width || width(domNode);
-//     canvas.height = height || height(domNode);
+      if (style)
+          Object.keys(style).forEach((property: any) => {
+              clone.style[property] = style[property];
+          });
 
-//     if (bgcolor) {
-//       const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
-//       ctx.fillStyle = bgcolor;
-//       ctx.fillRect(0, 0, canvas.width, canvas.height);
-//     }
-//     return canvas;
-//   }
-// }
+      return clone;
+    }
+    return await Promise.resolve(node)
+        .then((node: HTMLElement) => {
+            return cloneNode(node, filter, true);
+        })
+        .then((clone) => {
+          if (loadFont) return embedFonts(clone);
+          return clone;
+        })
+        .then(inlineImages)
+        .then(applyOptions)
+        .then((clone) => {
+          if (!clone) return
+            return domToSvg(clone,
+                width || nodeWidth(node),
+                height || nodeHeight(node)
+            )
+        })
+  }
 
-const mimes: Record<string, string> = {
-  'ttf': 'application/font-truetype',
-  'eot': 'application/vnd.ms-fontobject',
-  'png': 'image/png',
-  'gif': 'image/gif',
-  'tiff': 'image/tiff',
-  'svg': 'image/svg+xml'
+  private newCanvas(domNode: HTMLElement): HTMLCanvasElement {
+    const { width, height, bgcolor } = this.options
+    let canvas = document.createElement('canvas');
+    canvas.width = width || nodeWidth(domNode);
+    canvas.height = height || nodeHeight(domNode);
+
+    if (bgcolor) {
+      const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+      ctx.fillStyle = bgcolor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    return canvas;
+  }
 }
-
-console.log(mimes)

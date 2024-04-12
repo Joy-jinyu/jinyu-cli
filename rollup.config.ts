@@ -4,7 +4,7 @@ import { resolve as pathResolve } from 'path'
 import postcss from 'rollup-plugin-postcss'
 import { babel } from '@rollup/plugin-babel'
 import { defineConfig, OutputOptions, RollupOptions } from 'rollup'
-import { getTargets, babelSupportModules, createConfig, distHasEsm } from './scripts'
+import { getTargets, createConfig } from './scripts'
 import { existsSync, rmSync } from 'fs'
 
 // const Global = `
@@ -25,25 +25,27 @@ targets.reverse().forEach((target) => {
 
   const outputConfig: { global: OutputOptions, cjs: OutputOptions; esm: OutputOptions } = {
     global: {
-      file: resolve('dist', `${target}.global.js`),
+      file: resolve('dist', `index.js`),
       format: 'iife',
       sourcemap
     },
     cjs: {
-      file: resolve('lib', `${target}.cjs.js`),
+      file: resolve('lib', `index.js`),
       format: 'cjs',
       sourcemap
     },
     esm: {
-      file: resolve('es', `${target}.esm.js`),
+      file: resolve('es', `index.js`),
       format: `es`,
       sourcemap
     }
   }
 
   const extraPlugins = []
+  const pkg = require(resolve('package.json'))
+  const { babel: needBabel, formats: buildFormats = [outputConfig.cjs] } = pkg?.buildOptions || {}
 
-  if (babelSupportModules.includes(target)) {
+  if (needBabel) {
     extraPlugins.push(postcss(), babel({
       babelHelpers: 'bundled',
       // include: [resolve('src')],
@@ -52,10 +54,9 @@ targets.reverse().forEach((target) => {
       extensions: ['.tsx', '.ts']
     }))
   }
-  const pkg = require(resolve('package.json'))
   const packageConfigs = createConfig({
     input: resolve('src', 'index.ts'),
-    output: distHasEsm.includes(target) ? [outputConfig.cjs, outputConfig.esm] : [outputConfig.cjs],
+    output: buildFormats.map((format: 'global' | 'cjs' | 'esm') => outputConfig[format]),
     pkg,
     plugins: extraPlugins,
     target

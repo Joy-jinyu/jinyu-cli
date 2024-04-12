@@ -6,5 +6,5 @@ if (importLocal(__dirname)) {
   console.log(`Using local version of ${chalk.green('ovo-cli')}`)
 }
 
-module.exports = require('../dist/index.cjs')
+module.exports = require('../lib/index')
 module.exports.default = module.exports

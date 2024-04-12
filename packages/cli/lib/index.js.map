@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sources":["../src/index.ts"],"sourcesContent":["import { Command } from 'commander'\nconst program = new Command()\n\nprogram.name('ovo-cli').description('ovo cli tools').version('0.0.4')\n\nimport './hello'\n"],"names":["Command","name","description","version"],"mappings":"cACgB,yBAAIA,UAEZC,KAAK,WAAWC,YAAY,iBAAiBC,QAAQ"}

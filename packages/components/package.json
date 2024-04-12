@@ -2,8 +2,8 @@
   "name": "@ovometajs/components",
   "version": "0.0.6",
   "description": "ovometa components project",
-  "main": "lib/components.cjs.js",
-  "module": "es/components.esm.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
     "components",
@@ -41,5 +41,9 @@
   ],
   "engines": {
     "node": ">=16.0.0"
+  },
+  "buildOptions": {
+    "babel": true,
+    "formats": ["cjs", "esm"]
   }
 }

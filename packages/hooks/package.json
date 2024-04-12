@@ -2,8 +2,8 @@
   "name": "@ovometajs/hooks",
   "version": "0.1.1",
   "description": "ovometa hooks project",
-  "main": "lib/hooks.cjs.js",
-  "module": "es/hooks.esm.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "types": "es/index.d.ts",
   "keywords": [
     "hooks",
@@ -36,5 +36,9 @@
   ],
   "engines": {
     "node": ">=16.0.0"
+  },
+  "buildOptions": {
+    "babel": true,
+    "formats": ["cjs", "esm"]
   }
 }

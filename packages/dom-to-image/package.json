@@ -2,8 +2,8 @@
   "name": "@ovometajs/dom-to-image",
   "version": "0.1.1",
   "description": "ovometa dom-to-image project",
-  "main": "lib/dom-to-image.cjs.js",
-  "module": "es/dom-to-image.esm.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "types": "es/index.d.ts",
   "keywords": [
     "dom-to-image",
@@ -30,5 +30,9 @@
   "devDependencies": {
     "@types/jquery": "^3.5.29",
     "jquery": "^3.7.1"
+  },
+  "buildOptions": {
+    "babel": true,
+    "formats": ["cjs", "esm"]
   }
 }

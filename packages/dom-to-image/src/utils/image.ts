@@ -34,7 +34,9 @@ export class Images {
         .then(function (dataUrl) {
             return new Promise(function (resolve, reject) {
                 element.onload = resolve;
-                element.onerror = reject;
+                element.onerror = () => {
+                  reject(`图片加载失败 newImage：${dataUrl}`)
+                };
                 element.src = dataUrl;
             });
         });

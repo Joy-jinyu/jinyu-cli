@@ -92,7 +92,9 @@ export const makeImage = async (uri: string | undefined): Promise<HTMLImageEleme
       image.onload = () => {
           resolve(image)
       }
-      image.onerror = reject
+      image.onerror = () => {
+        reject(`图片加载失败: ${uri}`)
+      }
       image.src = uri
   })
 }
@@ -166,7 +168,7 @@ export const getAndEncode = (url: string, {
 }
 
 export const dataAsUrl = (content: string, type: string) => {
-    return 'data:' + type + 'base64,' + content
+    return 'data:' + type + ';base64,' + content
 }
 
 export const escape = (string: string) => {
@@ -195,13 +197,13 @@ export const escapeXhtml = (string: string) => {
     return string.replace(/#/g, '%23').replace(/\n/g, '%0A')
 }
 
-export const width = (node: HTMLElement) => {
+export const nodeWidth = (node: HTMLElement) => {
     let leftBorder = px(node, 'border-left-width')
     let rightBorder = px(node, 'border-right-width')
     return node.scrollWidth + leftBorder + rightBorder
 }
 
-export const height = (node: HTMLElement) => {
+export const nodeHeight = (node: HTMLElement) => {
     let topBorder = px(node, 'border-top-width')
     let bottomBorder = px(node, 'border-bottom-width')
     return node.scrollHeight + topBorder + bottomBorder

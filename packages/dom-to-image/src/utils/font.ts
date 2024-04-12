@@ -33,7 +33,7 @@ export class FontFaces {
       const cssRules: CSSRule[] = [];
       styleSheets.forEach((sheet) => {
           try {
-            asArray<CSSRuleList, CSSRule>(sheet.cssRules || [])
+            asArray<CSSRuleList, CSSRule>(sheet.cssRules)
               .forEach((rule: CSSRule) => {
               cssRules.push(rule);
             })
