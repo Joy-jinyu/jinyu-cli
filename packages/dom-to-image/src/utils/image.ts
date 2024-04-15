@@ -15,7 +15,8 @@ export class Images {
             if (node instanceof HTMLImageElement)
                 return this.newImage(node) || undefined;
             return Promise.all(
-                    asArray<NodeListOf<ChildNode>, ChildNode>(node.childNodes).map((child: ChildNode) =>this.inlineAll(child))
+              asArray<NodeListOf<ChildNode>, ChildNode>(node.childNodes)
+                .map((child: ChildNode) => this.inlineAll(child))
                 );
         });
   }

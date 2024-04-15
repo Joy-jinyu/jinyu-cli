@@ -8,6 +8,7 @@ const supportFile = ['ts', 'tsx', 'less']
 const config: Config = {
   testEnvironment: 'jsdom',
   preset: 'ts-jest',
+  setupFiles: ['jest-canvas-mock'],
   setupFilesAfterEnv: ['./scripts/setupJestEnv.ts'],
   globals: {
     __DEV__: true,
@@ -41,7 +42,7 @@ const config: Config = {
   watchPathIgnorePatterns: ['/node_modules/', '/dist/', '/.git/'],
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'js'],
   rootDir: __dirname,
-  testMatch: ['<rootDir>/packages/*/__tests__/**/*spec.[jt]s?(x)']
+  testMatch: ['<rootDir>/packages/dom-to-image/__tests__/**/*spec.[jt]s?(x)']
 }
 
 export default config

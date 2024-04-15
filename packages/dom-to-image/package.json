@@ -12,9 +12,6 @@
   ],
   "author": "joy@ovometa.group",
   "license": "MIT",
-  "dependencies": {
-    "imagediff": "^1.0.8"
-  },
   "publishConfig": {
     "access": "public"
   },
@@ -28,11 +25,14 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.29",
-    "jquery": "^3.7.1"
+    "jest-canvas-mock": "^2.5.2",
+    "puppeteer": "^22.6.5"
   },
   "buildOptions": {
     "babel": true,
-    "formats": ["cjs", "esm"]
+    "formats": [
+      "cjs",
+      "esm"
+    ]
   }
 }
