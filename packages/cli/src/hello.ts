@@ -1,7 +1,8 @@
 import { Command } from 'commander'
 import chalk from 'chalk'
+
 const program = new Command()
-const log = console.log
+const {log} = console
 
 const helloAction = async (
   str: string,

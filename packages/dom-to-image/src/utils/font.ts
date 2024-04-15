@@ -8,25 +8,17 @@ export class FontFaces {
   public resolveAll() {
     document.querySelector
     return this.readAll(document)
-        .then((webFonts) => {
-            return Promise.all(
-                webFonts.map(function (webFont) {
-                    return webFont.resolve();
-                })
-            );
-        })
-        .then(function (cssStrings) {
-            return cssStrings.join('\n');
-        });
+        .then((webFonts) => Promise.all(
+                webFonts.map((webFont) => webFont.resolve())
+            ))
+        .then((cssStrings) => cssStrings.join('\n'));
   }
 
   private readAll(dom: Document) {
     return Promise.resolve(asArray<StyleSheetList, CSSStyleSheet>(dom.styleSheets))
         .then(this.getCssRules)
         .then(this.selectWebFontRules)
-        .then((rules) => {
-            return rules.map(this.newWebFont);
-        });
+        .then((rules) => rules.map(this.newWebFont));
   }
 
   private getCssRules(styleSheets: CSSStyleSheet[]) {
@@ -38,7 +30,7 @@ export class FontFaces {
               cssRules.push(rule);
             })
           } catch (e: any) {
-              console.log('Error while reading CSS rules from ' + sheet.href, e.toString());
+              console.log(`Error while reading CSS rules from ${  sheet.href}`, e.toString());
           }
       });
       return cssRules;
@@ -48,9 +40,7 @@ export class FontFaces {
 
   private selectWebFontRules(cssRules: Array<CSSRule | CSSFontFaceRule>) {
     return cssRules
-        .filter((rule) => {
-            return rule.type === CSSRule.FONT_FACE_RULE;
-        })
+        .filter((rule) => rule.type === CSSRule.FONT_FACE_RULE)
         .filter((rule) => {
           if (rule instanceof CSSFontFaceRule) {
             return Inliner.shouldProcess(rule.style.getPropertyValue('src'));
@@ -65,7 +55,7 @@ export class FontFaces {
               const baseUrl = (webFontRule.parentStyleSheet || {}).href || '';
               return Inliner.inlineAll(webFontRule.cssText, baseUrl);
           },
-          src: function () {
+          src () {
               return webFontRule.style.getPropertyValue('src');
           }
       };
@@ -77,7 +67,7 @@ export const embedFonts = (node: HTMLElement | undefined) => {
 
   const fontFaces = new FontFaces()
   return fontFaces.resolveAll()
-    .then(function (cssText) {
+    .then((cssText) => {
         const styleNode = document.createElement('style');
         node.appendChild(styleNode);
         styleNode.appendChild(document.createTextNode(cssText));

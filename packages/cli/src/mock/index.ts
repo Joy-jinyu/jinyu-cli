@@ -1,5 +1,6 @@
 import { Command } from 'commander'
 import { createServer } from './server'
+
 const program = new Command()
 
 const mockAction = async (

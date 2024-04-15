@@ -27,7 +27,7 @@ export async function createServer(
   /**
    * @type {import('vite').ViteDevServer}
    */
-  let vite: ViteDevServer | undefined = undefined
+  let vite: ViteDevServer | undefined
   if (!isProd) {
     vite = await (
       await import('vite')
@@ -65,7 +65,7 @@ export async function createServer(
     try {
       const url = req.originalUrl.replace('/mock/', '/')
 
-      let template, render
+      let template; let render
       if (!isProd && vite) {
         // always read fresh template in dev
         template = fs.readFileSync(resolve('index.html'), 'utf-8')

@@ -8,14 +8,12 @@ export class Inliner {
   }
 
   public static readUrls(url: string) {
-      var result = [];
-      var match;
+      const result = [];
+      let match;
       while ((match = this.URL_REGEX.exec(url)) !== null) {
           result.push(match[1]);
       }
-      return result.filter(function (url) {
-          return !isDataUrl(url);
-      });
+      return result.filter((url) => !isDataUrl(url));
   }
 
   public static inlineAll(link: string, baseUrl = '') {
@@ -24,30 +22,20 @@ export class Inliner {
     return Promise.resolve(link)
         .then(this.readUrls)
         .then((urls) => {
-            var done = Promise.resolve(link);
+            let done = Promise.resolve(link);
             urls.forEach((url) => {
-                done = done.then((_link) => {
-                    return this.inline(_link, url, baseUrl);
-                });
+                done = done.then((_link) => this.inline(_link, url, baseUrl));
             });
             return done;
         });
   }
 
   public static inline(link: string, url: string, baseUrl: string) {
-    const urlAsRegex = (_url: string) => {
-      return new RegExp('(url\\([\'"]?)(' + escape(_url) + ')([\'"]?\\))', 'g');
-    }
+    const urlAsRegex = (_url: string) => new RegExp(`(url\\(['"]?)(${  escape(_url)  })(['"]?\\))`, 'g')
       return Promise.resolve(url)
-          .then(function (url) {
-              return baseUrl ? resolveUrl(url, baseUrl) : url;
-          })
+          .then((url) => baseUrl ? resolveUrl(url, baseUrl) : url)
           .then(getAndEncode)
-          .then((data) => {
-              return dataAsUrl(data, mimeType(url));
-          })
-          .then((dataUrl) => {
-              return link.replace(urlAsRegex(url), '$1' + dataUrl + '$3');
-          });
+          .then((data) => dataAsUrl(data, mimeType(url)))
+          .then((dataUrl) => link.replace(urlAsRegex(url), `$1${  dataUrl  }$3`));
   }
 }

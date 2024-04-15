@@ -1,15 +1,15 @@
 import { asArray, makeImage, uid } from "./utils";
 
-export const cloneNode = async (node: HTMLElement, filter: Function, root?: Boolean) => {
+export const cloneNode = async (node: HTMLElement, filter: Function, root?: boolean) => {
   if (!root && filter && !filter(node)) return;
 
 
   const cloneChildren = async (original: HTMLElement, clone: HTMLElement, filter: Function) => {
-    let children = original.childNodes;
+    const children = original.childNodes;
     if (children.length === 0) return Promise.resolve(clone);
 
     const cloneChildrenInOrder = async (parent: HTMLElement, children: ChildNode[], filter: Function) => {
-      for await (let child of children) {
+      for await (const child of children) {
         const childClone = await cloneNode(child as HTMLElement, filter);
         if (childClone) parent.appendChild(childClone);
       }
@@ -32,14 +32,12 @@ export const cloneNode = async (node: HTMLElement, filter: Function, root?: Bool
         .then(clonePseudoElements)
         .then(copyUserInput)
         .then(fixSvg)
-        .then(function () {
-            return clone;
-        });
+        .then(() => clone);
 
     function cloneStyle() {
         const copyStyle = (source: CSSStyleDeclaration, target: CSSStyleDeclaration) => {
             const copyProperties = () => {
-                asArray<CSSStyleDeclaration, string>(source).forEach(function (name) {
+                asArray<CSSStyleDeclaration, string>(source).forEach((name) => {
                     target.setProperty(
                         name,
                         source.getPropertyValue(name),
@@ -54,41 +52,41 @@ export const cloneNode = async (node: HTMLElement, filter: Function, root?: Bool
     }
 
     function clonePseudoElements() {
-        [':before', ':after'].forEach(function (element) {
+        [':before', ':after'].forEach((element) => {
             clonePseudoElement(element);
         });
 
         function clonePseudoElement(element: string) {
-            let style = window.getComputedStyle(original, element);
-            let content = style.getPropertyValue('content');
+            const style = window.getComputedStyle(original, element);
+            const content = style.getPropertyValue('content');
 
             if (content === '' || content === 'none') return;
 
-            let className = uid();
-            clone.className = clone.className + ' ' + className;
-            let styleElement = document.createElement('style');
+            const className = uid();
+            clone.className = `${clone.className  } ${  className}`;
+            const styleElement = document.createElement('style');
             styleElement.appendChild(formatPseudoElementStyle(className, element, style));
             clone.appendChild(styleElement);
 
             function formatPseudoElementStyle(className: string, element: string, style: CSSStyleDeclaration) {
-                let selector = '.' + className + ':' + element;
-                let cssText = style.cssText ? formatCssText(style) : formatCssProperties(style);
-                return document.createTextNode(selector + '{' + cssText + '}');
+                const selector = `.${  className  }:${  element}`;
+                const cssText = style.cssText ? formatCssText(style) : formatCssProperties(style);
+                return document.createTextNode(`${selector  }{${  cssText  }}`);
 
                 function formatCssText(style: CSSStyleDeclaration) {
-                    let content = style.getPropertyValue('content');
-                    return style.cssText + ' content: ' + content + ';';
+                    const content = style.getPropertyValue('content');
+                    return `${style.cssText  } content: ${  content  };`;
                 }
 
                 function formatCssProperties(style: CSSStyleDeclaration) {
-                    return asArray<CSSStyleDeclaration, string>(style)
+                    return `${asArray<CSSStyleDeclaration, string>(style)
                         .map(formatProperty)
-                        .join('; ') + ';';
+                        .join('; ')  };`;
 
                     function formatProperty(name: string) {
-                        return name + ': ' +
-                            style.getPropertyValue(name) +
-                            (style.getPropertyPriority(name) ? ' !important' : '');
+                        return `${name  }: ${ 
+                            style.getPropertyValue(name) 
+                            }${style.getPropertyPriority(name) ? ' !important' : ''}`;
                     }
                 }
             }
@@ -105,8 +103,8 @@ export const cloneNode = async (node: HTMLElement, filter: Function, root?: Bool
         clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
         if (!(clone instanceof SVGRectElement)) return;
-        ['width', 'height'].forEach(function (attribute) {
-            let value = clone.getAttribute(attribute);
+        ['width', 'height'].forEach((attribute) => {
+            const value = clone.getAttribute(attribute);
             if (!value) return;
 
             clone.style.setProperty(attribute, value);

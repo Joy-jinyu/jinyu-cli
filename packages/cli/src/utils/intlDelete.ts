@@ -56,6 +56,6 @@ function preCheck(skipCommit: boolean) {
     '  2. 复杂情况，比如有变量替换和 useGetHTML 的地方，请人工校验',
     '  3. 执行完建议人工浏览一遍所有文件，做好验证，可使用扫描工具 visage i18n-lint <path>，配合检查'
   ]
-  const hintStr = hint.join('\n') + '\n\n'
+  const hintStr = `${hint.join('\n')  }\n\n`
   console.log(chalk.cyan(hintStr))
 }

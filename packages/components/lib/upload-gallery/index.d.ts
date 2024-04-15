@@ -1,6 +1,7 @@
 /// <reference types="react" />
 import type { UploadFile } from 'antd/es/upload/interface';
 import './styles.less';
+
 interface IUploadGallery {
     action: string;
     value?: string;

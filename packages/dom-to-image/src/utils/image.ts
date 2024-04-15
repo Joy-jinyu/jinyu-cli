@@ -14,11 +14,8 @@ export class Images {
         .then(() => {
             if (node instanceof HTMLImageElement)
                 return this.newImage(node) || undefined;
-            else
-                return Promise.all(
-                    asArray<NodeListOf<ChildNode>, ChildNode>(node.childNodes).map((child: ChildNode) =>{
-                        return this.inlineAll(child);
-                    })
+            return Promise.all(
+                    asArray<NodeListOf<ChildNode>, ChildNode>(node.childNodes).map((child: ChildNode) =>this.inlineAll(child))
                 );
         });
   }
@@ -28,18 +25,14 @@ export class Images {
 
     return await Promise.resolve(element.src)
         .then(getAndEncode)
-        .then(function (data) {
-            return dataAsUrl(data, mimeType(element.src));
-        })
-        .then(function (dataUrl) {
-            return new Promise(function (resolve, reject) {
+        .then((data) => dataAsUrl(data, mimeType(element.src)))
+        .then((dataUrl) => new Promise((resolve, reject) => {
                 element.onload = resolve;
                 element.onerror = () => {
                   reject(`图片加载失败 newImage：${dataUrl}`)
                 };
                 element.src = dataUrl;
-            });
-        });
+            }));
   }
 
   private async inlineBackground(node: HTMLElement): Promise<HTMLElement> {
@@ -64,7 +57,5 @@ export const inlineImages = async (node: HTMLElement | undefined) => {
 
   const images = new Images()
   return await images.inlineAll(node)
-      .then(function () {
-          return node;
-      });
+      .then(() => node);
 }

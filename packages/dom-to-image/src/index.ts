@@ -6,6 +6,7 @@ import { delay, makeImage, nodeHeight, nodeWidth} from "./utils";
 
 export class DomToImage {
   private options: any
+
   constructor(options: any = {}) {
     this.options = options || {}
   }
@@ -14,9 +15,7 @@ export class DomToImage {
     this.options = {...this.options, ...options }
 
     return await this.draw(node)
-        .then(function (canvas) {
-            return canvas.toDataURL();
-        });
+        .then((canvas) => canvas.toDataURL());
   }
 
   private draw(domNode: HTMLElement, options: any = {}) {
@@ -25,7 +24,7 @@ export class DomToImage {
       .then(makeImage)
       .then(delay(100))
       .then((image: any) => {
-        let canvas = this.newCanvas(domNode);
+        const canvas = this.newCanvas(domNode);
         canvas.getContext('2d')?.drawImage(image, 0, 0);
         return canvas;
       });
@@ -39,8 +38,8 @@ export class DomToImage {
     const applyOptions = (clone: HTMLElement | undefined) => {
       if (!clone) return
       if (bgcolor) clone.style.backgroundColor = bgcolor;
-      if (width) clone.style.width = width + 'px';
-      if (height) clone.style.height = height + 'px';
+      if (width) clone.style.width = `${width  }px`;
+      if (height) clone.style.height = `${height  }px`;
 
       if (style)
           Object.keys(style).forEach((property: any) => {
@@ -50,9 +49,7 @@ export class DomToImage {
       return clone;
     }
     return await Promise.resolve(node)
-        .then((node: HTMLElement) => {
-            return cloneNode(node, filter, true);
-        })
+        .then((node: HTMLElement) => cloneNode(node, filter, true))
         .then((clone) => {
           if (loadFont) return embedFonts(clone);
           return clone;
@@ -70,7 +67,7 @@ export class DomToImage {
 
   private newCanvas(domNode: HTMLElement): HTMLCanvasElement {
     const { width, height, bgcolor } = this.options
-    let canvas = document.createElement('canvas');
+    const canvas = document.createElement('canvas');
     canvas.width = width || nodeWidth(domNode);
     canvas.height = height || nodeHeight(domNode);
 
