@@ -4,14 +4,9 @@ import chalk from 'chalk'
 const { log } = console
 
 const helloAction = async (
-  str: string,
-  options: {
-    name: string
-  }
+  str: string
 ) => {
-  if (options.name) {
-    log(`hello ${chalk.bold.red(str)}, it's happy to meet you!`)
-  }
+  log(`hello ${chalk.bold.red(str)}, it's happy to meet you!`)
 }
 
 export const registerHello = (program: Command) => {
@@ -19,7 +14,5 @@ export const registerHello = (program: Command) => {
     .command('hello')
     .description('hello commander')
     .argument('<string>', 'console name')
-    .option('-n, --name', 'show you name')
-    .option('-s, --separator <char>', 'separator character', ',')
     .action(helloAction)
 }

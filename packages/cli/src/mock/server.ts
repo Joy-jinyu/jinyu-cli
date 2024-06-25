@@ -31,7 +31,7 @@ export async function createServer(
   const apiProxy = createProxyMiddleware({
     target: apiTarget, // 目标服务器地址
     changeOrigin: true, // 改变请求源头，对于跨域请求很有用
-    pathRewrite: { '^/api': '' }, // 重写请求路径，去掉 '/api' 前缀
+    // pathRewrite: { '^/api': '' }, // 重写请求路径，去掉 '/api' 前缀
   });
 
     // 如果需要代理静态资源，比如图片、CSS等，也可以类似配置
@@ -95,8 +95,9 @@ export async function createServer(
     } catch (e: unknown) {
       if (e instanceof Error) {
         vite && vite.ssrFixStacktrace(e)
-        console.log(e.stack)
-        res.status(500).end(e.stack)
+        console.log(req.originalUrl)
+        // res.status(500).end(e.stack)
+        res.status(200).set({ 'Content-Type': 'text/html' }).end('')
       }
     }
   })
@@ -105,7 +106,9 @@ export async function createServer(
 
   mockData.forEach((data: MockData) => {
     app.use(`/api${data.apiPath}`, (req, res) => {
-      res.status(200).json(data.jsonStr)
+      res.status(200).send(
+        JSON.parse(data.jsonStr)
+      )
     })
   })
   // 使用中间件
