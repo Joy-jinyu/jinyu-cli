@@ -1,8 +1,7 @@
 import { Command } from 'commander'
 import chalk from 'chalk'
 
-const program = new Command()
-const {log} = console
+const { log } = console
 
 const helloAction = async (
   str: string,
@@ -15,12 +14,12 @@ const helloAction = async (
   }
 }
 
-program
-  .command('hello')
-  .description('hello commander')
-  .argument('<string>', 'console name')
-  .option('-n, --name', 'show you name')
-  .option('-s, --separator <char>', 'separator character', ',')
-  .action(helloAction)
-
-program.parse(process.argv)
+export const registerHello = (program: Command) => {
+  program
+    .command('hello')
+    .description('hello commander')
+    .argument('<string>', 'console name')
+    .option('-n, --name', 'show you name')
+    .option('-s, --separator <char>', 'separator character', ',')
+    .action(helloAction)
+}

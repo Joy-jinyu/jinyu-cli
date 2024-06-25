@@ -1,1 +1,1 @@
-import './hello';
+export {};

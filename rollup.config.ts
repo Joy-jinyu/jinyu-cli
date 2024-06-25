@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { resolve as pathResolve } from 'path'
+import * as env from 'env-var'
 
 import postcss from 'rollup-plugin-postcss'
 import { babel } from '@rollup/plugin-babel'
@@ -13,15 +14,19 @@ import { existsSync, rmSync } from 'fs'
 
 const rollupOptions: RollupOptions[] = []
 const sourcemap = true
-const envTargets = process.env.TARGETS && process.env.TARGETS.split(',')
+const envTargets = env.get('TARGETS').asArray('、')
 const targets = getTargets(envTargets as string[])
-/**
- * * [书写配置文件可以使用ts写法](https://rollupjs.org/guide/en/#--configplugin-plugin)
- * * [rollup常用的插件]（https://blog.csdn.net/zz_jesse/article/details/124642247）
- */
+// /**
+//  * * [书写配置文件可以使用ts写法](https://rollupjs.org/guide/en/#--configplugin-plugin)
+//  * * [rollup常用的插件]（https://blog.csdn.net/zz_jesse/article/details/124642247）
+//  */
 targets.reverse().forEach((target) => {
   const resolve = (...args: string[]) => pathResolve('packages', target, ...args)
-  if (existsSync(resolve('dist'))) rmSync(resolve('dist'), { recursive: true, force: true })
+
+  const clearDir = (dir: string) => {
+    if (existsSync(resolve(dir))) rmSync(resolve(dir), { recursive: true, force: true })
+  }
+  ['dist', 'lib', 'es'].forEach(clearDir)
 
   const outputConfig: { global: OutputOptions, cjs: OutputOptions; esm: OutputOptions } = {
     global: {

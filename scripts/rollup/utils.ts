@@ -42,16 +42,17 @@ export const createConfig = ({
   target: string
 }): RollupOptions => {
   const tsPlugin = ts({
-    check: process.env.NODE_ENV === 'production',
+    // check: process.env.NODE_ENV === 'production',
     tsconfig: pathResolve(__dirname, 'tsconfig.json'),
-    cacheRoot: pathResolve(__dirname, 'node_modules/.rts2_cache'),
+    // cacheRoot: pathResolve(__dirname, 'node_modules/.rts2_cache'),
+    clean: true, // 是否在每次构建前清理输出目录，默认为 false
     tsconfigOverride: {
       include: [`packages/${target}/src`],
       exclude: ['rollup.config.ts', 'packages/*/__tests__']
     }
   })
 
-  let external = [
+  const external = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
     ...['path', 'url', 'stream'],

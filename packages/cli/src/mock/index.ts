@@ -1,27 +1,28 @@
 import { Command } from 'commander'
 import { createServer } from './server'
+import chalk from 'chalk'
 
-const program = new Command()
-
-const mockAction = async (
-  str: string,
-  options: {
-    port: string
-  }
-) => {
-  if (options.port) {
-    createServer().then(({ app }) =>
-      app.listen(options.port || 6173, () => {
-        console.log('http://localhost:6173')
+export const registerMock = (program: Command) => {
+  const mockAction = async (apiTarget: string, staticTarget: string) => {
+    const opts = program.opts()
+    const port = opts.port || 6173
+    createServer({
+      apiTarget,
+      staticTarget
+    }).then(({ app }) =>
+      app.listen(port, () => {
+        console.log(
+          chalk.green.underline(`http://localhost:${port}`)
+        )
       })
     )
   }
+
+  program.option('-p, --port <port>', 'mock port');
+
+  program
+    .command('mock')
+    .description('start a mock manage')
+    .arguments("<str> <str>")
+    .action(mockAction)
 }
-
-program
-  .command('mock')
-  .description('start a mock manage')
-  .option('-p, --port', 'mock port')
-  .action(mockAction)
-
-program.parse(process.argv)

@@ -1,0 +1,40 @@
+{
+  "name": "@ovometajs/utils",
+  "version": "0.0.1",
+  "description": "ovometa utils project",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "es/index.d.ts",
+  "keywords": [
+    "utils",
+    "ovo",
+    "ovometa"
+  ],
+  "author": "joy@ovometa.group",
+  "license": "MIT",
+  "dependencies": {
+    "glob": "^10.4.2"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "es/",
+    "lib/",
+    "README.md",
+    "package.json"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "buildOptions": {
+    "babel": true,
+    "formats": [
+      "cjs",
+      "esm"
+    ]
+  }
+}
