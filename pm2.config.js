@@ -1,11 +1,12 @@
 module.exports = {
     apps: [
         {
-            name: 'baas-explorer',
-            script: 'src/server/index.ts',
+            name: 'baas',
+            script: './node_modules/.bin/ts-node',
+            args: '-T -r tsconfig-paths/register ./src/server/index.ts',
             cwd: './',
             exec_mode: 'cluster_mode',
-            instances: 'max',
+            instances: '1',
             error_file: './logs/app-err.log',
             out_file: './logs/app-out.log',
             merge_logs: true,

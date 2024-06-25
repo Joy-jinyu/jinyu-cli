@@ -11,10 +11,10 @@
   ],
   "scripts": {
     "dev": "dotenv -e .env.development nodemon --watch src/server/index.ts --exec ts-node src/server/index.ts",
-    "pm2:dev": "pm2 start pm2.config.js --env dev",
+    "pm2:dev": "pm2 start pm2.config.js --env dev --name bass",
     "build": "yarn build:client && yarn build:server",
     "build:client": "vite build --outDir dist/client",
-    "build:server": "vite build --outDir dist/server --ssr src/server/entry-server.tsx",
+    "build:server": "vite build --outDir dist/server --ssr src/entry-server.tsx",
     "pm2:uat": "pm2 start pm2.config.js --env uat",
     "pm2:prod": "pm2 start pm2.config.js --env prod",
     "prerender": "vite build --outDir dist/static && yarn build:server && ts-node prerender",
@@ -50,7 +50,8 @@
     "react-dom": "17.0.2",
     "react-redux": "^8.0.2",
     "react-router-dom": "^6.3.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
     "@types/eslint": "^8.4.6",
