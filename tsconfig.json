@@ -22,5 +22,5 @@
     "moduleResolution": "node"
   },
   "include": ["packages/*/src", "rollup.config.ts", "packages/*/__tests__"],
-  "exclude": ["node_modules", "*/node_modules"]
+  "exclude": ["node_modules", "**/node_modules/**/*"]
 }

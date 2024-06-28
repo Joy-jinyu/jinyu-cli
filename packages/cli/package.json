@@ -16,7 +16,8 @@
   "author": "joy@ovometa.group",
   "license": "MIT",
   "scripts": {
-    "dev": "node ./src/mock/server"
+    "dev": "node ./src/mock/server",
+    "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
@@ -28,6 +29,7 @@
     "execa": "^6.1.0",
     "express": "^4.18.2",
     "http-proxy-middleware": "^3.0.0",
+    "import-local": "^3.2.0",
     "recast": "^0.22.0",
     "vite": "^4.4.9"
   },
@@ -55,6 +57,18 @@
     "babel": true,
     "formats": [
       "cjs"
+    ]
+  },
+  "tsconfig": {
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "declaration": true,
+      "outDir": "./lib",
+      "strict": true
+    },
+    "include": [
+      "src/**/*.ts"
     ]
   }
 }

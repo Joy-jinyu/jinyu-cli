@@ -47,7 +47,7 @@ export const createConfig = ({
     // cacheRoot: pathResolve(__dirname, 'node_modules/.rts2_cache'),
     clean: true, // 是否在每次构建前清理输出目录，默认为 false
     tsconfigOverride: {
-      include: [`packages/${target}/src`],
+      // include: [`packages/${target}/src`],
       exclude: ['rollup.config.ts', 'packages/*/__tests__']
     }
   })
@@ -71,7 +71,7 @@ export const createConfig = ({
       rollupResolve({
         extensions: ['.ts', '.tsx']
       }),
-      tsPlugin,
+      // tsPlugin,
       commonjs(),
       ...plugins,
       terser({

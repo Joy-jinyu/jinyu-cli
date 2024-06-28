@@ -3,7 +3,7 @@
   "scripts": {
     "clean:modules": "rimraf node_modules **/node_modules **/**/node_modules",
     "lint:fix": "npx eslint --ext .ts packages/ --fix",
-    "rollup": "rollup --watch --config rollup.config.ts --configPlugin @rollup/plugin-typescript --sourcemap --environment TARGETS:utils、cli",
+    "rollup": "rollup --watch --config rollup.config.ts --configPlugin @rollup/plugin-typescript --sourcemap --environment TARGETS:cli",
     "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --verbose"
   },
   "author": "joy@ovometa.group",
