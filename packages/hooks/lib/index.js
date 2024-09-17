@@ -1,2 +1,2 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("react");exports.useCallbackRef=function(r){var t=e.useRef(r);return e.useLayoutEffect((function(){t.current=r})),e.useCallback((function(){for(var e,r=arguments.length,u=new Array(r),n=0;n<r;n++)u[n]=arguments[n];return null===(e=t.current)||void 0===e?void 0:e.call.apply(e,[t].concat(u))}),[])};
+"use strict";var r=require("react");exports.useCallbackRef=function(e){var t=r.useRef(e);return r.useLayoutEffect((function(){t.current=e})),r.useCallback((function(){for(var r,e=arguments.length,u=new Array(e),n=0;n<e;n++)u[n]=arguments[n];return null===(r=t.current)||void 0===r?void 0:r.call.apply(r,[t].concat(u))}),[])};
 //# sourceMappingURL=index.js.map

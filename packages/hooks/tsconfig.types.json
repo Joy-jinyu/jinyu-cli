@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "types", // 编译后生成的文件目录
+    "declaration": true,
+    "emitDeclarationOnly": true
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}

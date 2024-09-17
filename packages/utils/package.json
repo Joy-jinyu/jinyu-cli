@@ -4,7 +4,7 @@
   "description": "ovometa utils project",
   "main": "lib/index.js",
   "module": "es/index.js",
-  "types": "es/index.d.ts",
+  "types": "types/index.d.ts",
   "keywords": [
     "utils",
     "ovo",
@@ -12,6 +12,9 @@
   ],
   "author": "joy@ovometa.group",
   "license": "MIT",
+  "scripts": {
+    "types": "tsc -p tsconfig.types.json"
+  },
   "dependencies": {
     "glob": "^10.4.2"
   },
